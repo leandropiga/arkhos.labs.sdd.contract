@@ -48,8 +48,12 @@ O rascunho planeja estas "surpresas" para mostrar como o SDD lida com mudanças:
    > ⚠️ **Erro encenado:** os 100 MB são de propósito. O Gemini aceita no máximo 50 MB por PDF.
    > Queremos que esse conflito apareça como bug mais tarde
    > ([ADR 0005](../decisoes/0005-bugs-reais-e-bug-encenado.md)). O rascunho original usava 5 MB.
-2. **Na implementação**: um PDF grande faz a análise falhar e o bug é tratado pelo fluxo
-   `/speckit-bug-assess` → `/speckit-bug-fix` → `/speckit-bug-test`.
+2. ~~**Na implementação**: um PDF grande faz a análise falhar e o bug é tratado pelo fluxo
+   `/speckit-bug-assess` → `/speckit-bug-fix` → `/speckit-bug-test`.~~
+   > **Atualização (2026-10-14):** isso não vai acontecer. O `/speckit-plan` encontrou o conflito
+   > dos 100 MB com o limite de 50 MB do Gemini, e a spec foi corrigida antes do código
+   > ([ADR 0009](../decisoes/0009-plano-pega-o-limite-do-gemini.md)). O fluxo `/speckit-bug-*`
+   > fica para bugs reais.
 3. **Depois da implementação**: o painel passa a mostrar o "total de análises por IA nos últimos
    30 dias", o que exige guardar o histórico de análises (spec → analyze → migration).
 

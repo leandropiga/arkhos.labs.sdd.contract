@@ -39,16 +39,17 @@ Regras de escrita:
 - Registrar erros e becos sem saída — eles são parte valiosa do tutorial.
 - Comandos em blocos de código copiáveis, indicando o shell (PowerShell / bash).
 - Não apagar entradas antigas; correções entram como nova entrada ou nota "Atualização".
-- **Cenas encenadas** (ex.: bug provocado de propósito, ADR 0005) devem aparecer marcadas com um
-  aviso explícito `⚠️ Erro encenado`, para o leitor saber o que é simulação didática.
+- **Cenas encenadas** (ex.: os 100 MB da clarificação, ADRs 0005 e 0009) devem aparecer marcadas
+  com um aviso explícito `⚠️ Erro encenado`, para o leitor saber o que é simulação didática.
 - O tutorial cobre **somente o Claude Code** (ADR 0007). Não escrever instruções para outros agentes.
 
 ## Desvios já decididos em relação ao rascunho
 
 Ao gerar prompts a partir do `TUTORIAL_DRAFT.md`, aplicar os ADRs:
 - 0004: comandos e versões atualizados (Spec Kit `--integration claude`, `gemini-3.8-flash` etc.).
-- 0005: no `/speckit-clarify`, o limite do PDF é **100 MB** (não 5 MB). Não revelar ao agente o
-  limite de 50 MB do Gemini.
+- 0005 + 0009: bugs reais passam pela extensão `bug` do Spec Kit e entram no diário. Não há mais
+  bug encenado: o limite do PDF é **50 MB** (limite do Gemini), corrigido na spec depois que o
+  `/speckit-plan` encontrou o conflito com os 100 MB da clarificação.
 - 0006: Vitest no backend e no frontend (não Jest).
 - 0008: Superpowers v7 via `superpowers@superpowers-marketplace` (não o marketplace oficial).
 

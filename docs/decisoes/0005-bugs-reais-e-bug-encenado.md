@@ -1,7 +1,9 @@
 # 0005 — Registrar bugs reais e também encenar um bug com o Gemini
 
 - **Data:** 2026-10-14
-- **Status:** aceita
+- **Status:** aceita; a parte do **bug encenado** foi substituída pela
+  [0009](./0009-plano-pega-o-limite-do-gemini.md) (o `/speckit-plan` encontrou o conflito antes
+  da implementação). A parte de bugs reais continua valendo.
 
 ## Contexto
 

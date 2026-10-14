@@ -19,6 +19,8 @@ de cada um." (texto completo em `docs/prompts/05-especificacao.md`)
 - Q: Como o endereço do cliente deve ser guardado, já que o gráfico da Home precisa da UF de cada
   cliente? → A: Dividido em Logradouro, Número, CEP, Cidade e UF, todos obrigatórios.
 - Q: Qual é o tamanho máximo permitido para o arquivo PDF de um contrato? → A: 100 MB.
+  **Emenda pós-plano:** 50 MB. O serviço de IA só analisa PDFs de até 50 MB; com 100 MB, contratos
+  seriam aceitos no cadastro e não poderiam ser analisados (ver `research.md`, R-07).
 - Q: Quanto tempo esperar pela análise da IA e como avisar quando ela falhar ou demorar demais?
   → A: 15 segundos; aviso não bloqueante (toast) informando que o serviço de análise está
   temporariamente indisponível.
@@ -200,7 +202,7 @@ novos dados aparecem (nome e foto no menu).
 - Tentativa de excluir um cliente que tem contratos: a exclusão é bloqueada e a mensagem informa
   quantos contratos existem (FR-010). Para excluir o cliente, é preciso excluir os contratos
   antes.
-- Um PDF acima de 100 MB é recusado no cadastro (e na substituição do arquivo), com uma
+- Um PDF acima de 50 MB é recusado no cadastro (e na substituição do arquivo), com uma
   mensagem informando o limite (FR-017).
 - Um arquivo com extensão `.pdf` que não é de fato um PDF (ou está corrompido) é recusado no
   cadastro, como qualquer outro formato inválido.
@@ -262,8 +264,9 @@ novos dados aparecem (nome e foto no menu).
   (escolhido entre os cadastrados) e arquivo, todos obrigatórios.
 - **FR-016**: O sistema DEVE aceitar somente arquivos PDF válidos, recusando outros formatos e
   arquivos corrompidos.
-- **FR-017**: O sistema DEVE aceitar arquivos PDF de até 100 MB e recusar arquivos maiores, com
-  uma mensagem informando o limite.
+- **FR-017**: O sistema DEVE aceitar arquivos PDF de até 50 MB e recusar arquivos maiores, com
+  uma mensagem informando o limite. O limite acompanha o máximo que o serviço de IA consegue
+  analisar, para que todo contrato aceito possa ser analisado.
 - **FR-018**: O sistema DEVE impedir a existência de contratos sem cliente válido.
 - **FR-019**: O sistema DEVE permitir que um cliente tenha vários contratos.
 - **FR-020**: O sistema DEVE permitir editar título, data de assinatura e cliente de um

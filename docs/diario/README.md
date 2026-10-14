@@ -13,3 +13,4 @@ Registro cronológico de cada etapa do laboratório. Cada entrada segue o
 | 05 | [Escrevendo a constituição](./05-constituicao.md) | 2 — Especificação | concluída |
 | 06 | [Escrevendo a especificação](./06-especificacao.md) | 2 — Especificação | concluída |
 | 07 | [Esclarecendo a especificação](./07-clarificacao.md) | 2 — Especificação | concluída |
+| 08 | [O plano técnico (e o bug que nunca aconteceu)](./08-plano-tecnico.md) | 3 — Planejamento técnico | concluída |
