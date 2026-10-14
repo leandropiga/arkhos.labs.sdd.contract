@@ -1,0 +1,74 @@
+import { z } from 'zod';
+import { cpfValido, normalizarCpf } from '../../lib/cpf.js';
+
+export const UFS = [
+  'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB',
+  'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO',
+] as const;
+
+/**
+ * Texto obrigatório com limites (sem espaços nas pontas).
+ * No zod 4 os checks não interrompem a cadeia; por isso a validação é uma só,
+ * e cada campo inválido gera exatamente uma mensagem.
+ */
+function texto(rotulo: string, min: number, max: number) {
+  const obrigatorio = `Informe ${rotulo}.`;
+  const nome = `${rotulo[0]!.toUpperCase()}${rotulo.slice(1)}`;
+  return z
+    .string({ error: obrigatorio })
+    .trim()
+    .superRefine((valor, ctx) => {
+      let mensagem: string | null = null;
+      if (valor.length === 0) mensagem = obrigatorio;
+      else if (valor.includes('\u0000')) mensagem = `${nome} contém caractere inválido.`;
+      else if (valor.length < min) mensagem = `${nome} deve ter ao menos ${min} caracteres.`;
+      else if (valor.length > max) mensagem = `${nome} deve ter no máximo ${max} caracteres.`;
+      if (mensagem) ctx.addIssue({ code: 'custom', message: mensagem });
+    });
+}
+
+/**
+ * Valor numérico que pode vir com pontuação (. - / espaço e parênteses): guarda só os dígitos.
+ * Letras e outros símbolos são recusados (não são pontuação).
+ */
+function somenteDigitos(mensagem: string, ehValido: (digitos: string) => boolean) {
+  return z
+    .string({ error: mensagem })
+    .trim()
+    .refine((valor) => /^[\d.\-/\s()]+$/.test(valor), mensagem)
+    .transform((valor) => valor.replace(/\D/g, ''))
+    .refine(ehValido, mensagem);
+}
+
+export const esquemaCliente = z.object({
+  nomeCompleto: texto('o nome completo', 3, 150),
+  telefone: somenteDigitos('Telefone inválido. Informe DDD e número (10 ou 11 dígitos).', (d) =>
+    /^\d{10,11}$/.test(d),
+  ),
+  cpf: z
+    .string({ error: 'Informe o CPF.' })
+    .trim()
+    .refine(cpfValido, 'CPF inválido.')
+    .transform(normalizarCpf),
+  rg: texto('o RG', 1, 20),
+  logradouro: texto('o logradouro', 1, 200),
+  numero: texto('o número', 1, 20),
+  cep: somenteDigitos('CEP inválido. Informe os 8 dígitos.', (d) => /^\d{8}$/.test(d)),
+  cidade: texto('a cidade', 1, 100),
+  // Só as 27 siglas em maiúsculas; sem normalização implícita ("sp" é recusado).
+  uf: z.enum(UFS, { error: 'UF inválida. Use uma das 27 siglas, em maiúsculas.' }),
+});
+
+export type DadosCliente = z.infer<typeof esquemaCliente>;
+
+export const esquemaListagemClientes = z.object({
+  nome: z.string().trim().optional(),
+  cpf: z.string().trim().optional(),
+  pagina: z.coerce
+    .number({ error: 'Página inválida.' })
+    .int('Página inválida.')
+    .min(1, 'Página inválida.')
+    .default(1),
+});
+
+export type ConsultaClientes = z.infer<typeof esquemaListagemClientes>;
