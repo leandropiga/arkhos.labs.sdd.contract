@@ -22,7 +22,7 @@ const itensMenu = [
 ]
 
 function ativo(pathname: string, destino: string) {
-  return destino === '/' ? pathname === '/' : pathname.startsWith(destino)
+  return destino === '/' ? pathname === '/' : pathname === destino || pathname.startsWith(destino + '/')
 }
 
 export function LayoutApp() {

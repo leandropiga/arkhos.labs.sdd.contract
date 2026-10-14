@@ -27,4 +27,9 @@ describe('LayoutApp (FR-032)', () => {
     renderizar()
     expect(screen.getByText('conteúdo da rota filha')).toBeInTheDocument()
   })
+
+  it('mostra o botão de alternar o menu em português', () => {
+    renderizar()
+    expect(screen.getByRole('button', { name: 'Alternar menu lateral' })).toBeInTheDocument()
+  })
 })
