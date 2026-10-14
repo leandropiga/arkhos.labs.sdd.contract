@@ -108,8 +108,10 @@ testadas), sem pacote extra.
 **Decisão**: dois diretórios, configurados por variável de ambiente:
 
 1. **Temporário** (`UPLOAD_TMP_DIR`, padrão `backend/tmp/uploads`): o multer grava aqui o arquivo
-   recebido (`diskStorage`, limite de 50 MB). O arquivo é validado (assinatura `%PDF-` nos
-   primeiros bytes). Se válido, é **movido** (`fs.rename`) para o armazenamento permanente. Em
+   recebido (`diskStorage`, limite de 50 MB). O arquivo é validado: assinatura `%PDF-` nos
+   primeiros bytes e marcador `%%EOF` nos últimos 1.024 bytes (pega arquivos truncados).
+   Validação mais profunda exigiria um parser de PDF, que não se justifica (Princípio II).
+   Se válido, é **movido** (`fs.rename`) para o armazenamento permanente. Em
    qualquer caso — sucesso, arquivo inválido ou erro no banco — um bloco `finally` garante que
    nada fica no diretório temporário.
 2. **Permanente** (`STORAGE_DIR`, padrão `backend/storage/contratos`): cada PDF fica como

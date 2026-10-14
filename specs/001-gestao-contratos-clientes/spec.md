@@ -227,8 +227,9 @@ novos dados aparecem (nome e foto no menu).
 - **FR-001**: O sistema DEVE exigir login com usuário e senha para acessar qualquer tela ou dado,
   exceto a própria tela de login.
 - **FR-002**: O sistema DEVE recusar credenciais inválidas com uma mensagem genérica, sem revelar
-  se o usuário existe. Após 5 tentativas erradas seguidas para o mesmo usuário, o sistema DEVE
-  recusar novas tentativas desse usuário por 15 minutos, mesmo com a senha correta, informando
+  se o usuário existe (exceto pelo aviso de bloqueio; ver Premissas). Após 5 tentativas erradas
+  seguidas para o mesmo usuário, o sistema DEVE recusar novas tentativas desse usuário por 15
+  minutos, mesmo com a senha correta, informando
   que o acesso está temporariamente bloqueado. Um login bem-sucedido zera a contagem.
 - **FR-003**: O sistema DEVE permitir que a pessoa logada saia (encerre a sessão).
 - **FR-004**: O sistema DEVE encerrar a sessão automaticamente após 8 horas, exigindo novo login.
@@ -342,6 +343,9 @@ novos dados aparecem (nome e foto no menu).
 ## Premissas
 
 - Há um único tipo de usuário (operador administrativo), sem perfis de acesso diferentes.
+- O bloqueio de login (FR-002) só vale para usuários existentes. Por isso, depois de 5 tentativas
+  erradas, o aviso de bloqueio revela que aquele nome de usuário existe. O risco é aceito nesta
+  versão: há um único usuário, criado na instalação, e o bloqueio já limita tentativas de senha.
 - O primeiro usuário é criado durante a instalação do sistema, por quem o instala; não há tela de
   cadastro de usuários (cadastro público está fora do escopo).
 - Clientes são pessoas físicas brasileiras (por isso CPF e RG); não há cadastro de pessoa

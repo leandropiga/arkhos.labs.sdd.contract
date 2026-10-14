@@ -73,6 +73,7 @@ clientes: lista/form/detalhe, contratos: lista/form/detalhe, perfil).
 | `react-router` | rotas da SPA e proteção por sessão |
 | `react-hook-form`, `@hookform/resolvers`, `recharts`, `sonner`, `lucide-react` | dependências dos próprios componentes do shadcn/ui (Form, Chart, Sonner, ícones) |
 | `@testing-library/*`, `jsdom` | testes de componentes React com Vitest |
+| `radix-ui`, `class-variance-authority`, `clsx`, `tailwind-merge`, `tw-animate-css` | base que o CLI do shadcn/ui instala em todo projeto (primitivas acessíveis do Radix e utilitários de classes); sem elas os componentes copiados não funcionam |
 
 Resultado: **portão aprovado**, sem violações a justificar.
 

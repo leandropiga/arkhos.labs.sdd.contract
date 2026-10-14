@@ -79,7 +79,8 @@ Criado apenas pelo script de seed (não há cadastro pela interface).
 **Regras**:
 
 - O arquivo fica em `STORAGE_DIR/<id>.pdf` ([R-06](./research.md#r-06-armazenamento-dos-pdfs--arquivos-temporários-princípio-iv)).
-- Só é aceito arquivo cujo conteúdo começa com `%PDF-` (FR-016); a extensão sozinha não basta.
+- Só é aceito arquivo cujo conteúdo começa com `%PDF-` e tem `%%EOF` nos últimos 1.024 bytes
+  (FR-016); a extensão sozinha não basta.
 - Substituir o PDF apaga a `AnaliseContrato` existente e o arquivo antigo (FR-031).
 - Excluir o contrato apaga a análise e o arquivo (FR-021).
 

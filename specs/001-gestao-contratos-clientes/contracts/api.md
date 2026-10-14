@@ -41,7 +41,7 @@ Toda resposta de erro, de qualquer rota, tem este formato e nada além dele:
 | 409 | `ANALISE_EM_ANDAMENTO` | já existe análise em curso para o contrato |
 | 413 | `ARQUIVO_MUITO_GRANDE` | PDF acima de 50 MB |
 | 422 | `PDF_NAO_ANALISAVEL` | PDF sem texto extraível ou protegido por senha, segundo a IA |
-| 429 | `LOGIN_BLOQUEADO` | 5 falhas seguidas; bloqueio de 15 min |
+| 429 | `LOGIN_BLOQUEADO` | 5 falhas seguidas; bloqueio de 15 min (só para usuário existente; risco aceito, ver Premissas da spec) |
 | 500 | `ERRO_INTERNO` | qualquer erro não previsto |
 | 503 | `IA_INDISPONIVEL` | IA falhou, estourou 15 s ou respondeu fora do formato |
 
