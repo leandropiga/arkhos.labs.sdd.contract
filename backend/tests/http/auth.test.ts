@@ -121,15 +121,21 @@ describe('POST /api/auth/logout', () => {
   });
 
   it('depois do logout, GET /api/auth/sessao responde 401 NAO_AUTENTICADO', async () => {
-    const agente = request.agent(criarApp());
-    const login = await agente.post('/api/auth/login').send({ usuario: 'admin', senha: SENHA });
+    // Cookies explícitos: o cookie é Secure fora de development e o jar do supertest (http) não o
+    // reenviaria, o que um navegador em https faria. Aqui simulamos o navegador à mão.
+    const app = criarApp();
+    const login = await request(app).post('/api/auth/login').send({ usuario: 'admin', senha: SENHA });
     expect(login.status).toBe(200);
-    expect((await agente.get('/api/auth/sessao')).status).toBe(200);
+    const sessao = cookieSessao(login).split(';')[0];
+    expect((await request(app).get('/api/auth/sessao').set('Cookie', sessao)).status).toBe(200);
 
-    const logout = await agente.post('/api/auth/logout');
+    const logout = await request(app).post('/api/auth/logout').set('Cookie', sessao);
     expect(logout.status).toBe(204);
 
-    const res = await agente.get('/api/auth/sessao');
+    // O navegador aplica o Set-Cookie do logout (valor vazio, expirado) e envia isso a seguir.
+    const aposLogout = cookieSessao(logout).split(';')[0];
+    expect(aposLogout).toBe('sessao=');
+    const res = await request(app).get('/api/auth/sessao').set('Cookie', aposLogout);
     expect(res.status).toBe(401);
     expect(res.body).toEqual({
       erro: { codigo: 'NAO_AUTENTICADO', mensagem: expect.any(String) },
