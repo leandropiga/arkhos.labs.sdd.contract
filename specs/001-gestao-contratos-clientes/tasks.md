@@ -131,7 +131,7 @@ nenhum contrato.
 
 ### Implementação da História 2
 
-- [ ] T041 [P] [US2] Criar `backend/src/lib/cpf.ts` (normalizar e validar dígitos verificadores) até T036 passar
+- [X] T041 [P] [US2] Criar `backend/src/lib/cpf.ts` (normalizar e validar dígitos verificadores) até T036 passar
 - [ ] T042 [US2] Criar `backend/src/modules/clientes/esquemas-clientes.ts` (zod: limites do modelo Cliente de T018, CPF/CEP/telefone aceitos com pontuação e normalizados para dígitos, UF entre as 27) e `backend/src/modules/clientes/servico-clientes.ts` (criar, editar, buscar por id com `totalContratos` e a lista `contratos` (`ContratoResumo[]`), listar com filtros e paginação de 20 por página, preencher `nomeBusca`, traduzir violação de unicidade em `409 CPF_DUPLICADO`, bloquear exclusão com `409 CLIENTE_COM_CONTRATOS` informando a quantidade)
 - [ ] T043 [US2] Criar `backend/src/modules/clientes/rotas-clientes.ts` (`GET/POST /api/clientes`, `GET/PUT/DELETE /api/clientes/:id`, todas autenticadas) e registrar em `backend/src/app.ts` até T037–T039 passarem
 - [ ] T044 [P] [US2] Criar `frontend/src/features/clientes/lista-clientes.tsx` (Table + Pagination do shadcn/ui, filtros por nome e CPF, estado vazio)
