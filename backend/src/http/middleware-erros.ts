@@ -33,6 +33,19 @@ export function middlewareErros(erro: unknown, _req: Request, res: Response, _ne
     return;
   }
 
+  // JSON malformado: o body-parser (express.json) lança SyntaxError com type 'entity.parse.failed'.
+  // Sem `campos`: não há campo a apontar, e a mensagem da biblioteca não pode vazar.
+  if (
+    typeof erro === 'object' &&
+    erro !== null &&
+    (erro as { type?: unknown }).type === 'entity.parse.failed'
+  ) {
+    res.status(400).json({
+      erro: { codigo: 'VALIDACAO_INVALIDA', mensagem: 'O corpo da requisição não é um JSON válido.' },
+    });
+    return;
+  }
+
   // O erro real fica só no log do servidor; nunca vai no corpo (Princípios III e V).
   console.error(erro);
   res.status(500).json({

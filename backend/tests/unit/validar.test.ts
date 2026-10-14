@@ -49,4 +49,17 @@ describe('validar', () => {
     expect(res.body.erro.codigo).toBe('VALIDACAO_INVALIDA');
     expect(res.body.erro.campos[0].campo).toBe('pagina');
   });
+
+  it('JSON malformado vira 400 VALIDACAO_INVALIDA genérico, sem campos nem eco da biblioteca', async () => {
+    const silenciar = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    const res = await request(criarApp())
+      .post('/corpo')
+      .set('Content-Type', 'application/json')
+      .send('{"nome": ');
+    silenciar.mockRestore();
+    expect(res.status).toBe(400);
+    expect(res.body).toEqual({
+      erro: { codigo: 'VALIDACAO_INVALIDA', mensagem: 'O corpo da requisição não é um JSON válido.' },
+    });
+  });
 });
