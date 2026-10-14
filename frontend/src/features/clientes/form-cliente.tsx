@@ -117,6 +117,12 @@ function Formulario({ id, inicial }: { id?: string; inicial: DadosCliente }) {
 /** Serve para criar (/clientes/novo) e editar (/clientes/:id/editar). */
 export function FormCliente() {
   const { id } = useParams()
+  // key: ao trocar de rota (editar -> novo, cliente A -> B) o estado interno nasce do zero.
+  return <FormClienteRota key={id ?? 'novo'} />
+}
+
+function FormClienteRota() {
+  const { id } = useParams()
   const [inicial, setInicial] = useState<DadosCliente | null>(id ? null : VAZIO)
   const [erroCarga, setErroCarga] = useState<string | null>(null)
 
@@ -143,7 +149,7 @@ export function FormCliente() {
     <section className="flex max-w-xl flex-col gap-4">
       <h1 className="text-2xl font-bold">{id ? 'Editar cliente' : 'Novo cliente'}</h1>
       {erroCarga && <FieldError>{erroCarga}</FieldError>}
-      {inicial && <Formulario id={id} inicial={inicial} />}
+      {inicial && <Formulario key={id ?? 'novo'} id={id} inicial={inicial} />}
     </section>
   )
 }

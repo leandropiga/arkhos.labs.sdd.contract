@@ -31,6 +31,9 @@ export function DetalheCliente() {
 
   useEffect(() => {
     let ativo = true
+    setCliente(null)
+    setErro(null)
+    setErroExclusao(null)
     api<ClienteDetalhe>(`/api/clientes/${id}`)
       .then((c) => {
         if (ativo) setCliente(c)

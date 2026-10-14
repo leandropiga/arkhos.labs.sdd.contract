@@ -14,7 +14,7 @@
  */
 import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { MemoryRouter, Route, Routes } from 'react-router'
+import { Link, MemoryRouter, Route, Routes } from 'react-router'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ListaClientes } from '@/features/clientes/lista-clientes'
 import { FormCliente } from '@/features/clientes/form-cliente'
@@ -42,6 +42,19 @@ function renderizar(caminho: string) {
     <MemoryRouter initialEntries={[caminho]}>
       <Routes>
         <Route path="/clientes" element={<ListaClientes />} />
+        <Route path="/clientes/novo" element={<FormCliente />} />
+        <Route path="/clientes/:id" element={<DetalheCliente />} />
+        <Route path="/clientes/:id/editar" element={<FormCliente />} />
+      </Routes>
+    </MemoryRouter>,
+  )
+}
+
+function renderizarComLinks(caminho: string, destino: string) {
+  return render(
+    <MemoryRouter initialEntries={[caminho]}>
+      <Link to={destino}>ir para outro</Link>
+      <Routes>
         <Route path="/clientes/novo" element={<FormCliente />} />
         <Route path="/clientes/:id" element={<DetalheCliente />} />
         <Route path="/clientes/:id/editar" element={<FormCliente />} />
@@ -183,6 +196,34 @@ describe('telas de clientes', () => {
         expect(fetchMock).toHaveBeenCalledWith('/api/clientes/c1', expect.objectContaining({ method: 'PUT' })),
       )
       expect(await screen.findByRole('heading', { name: 'Ana Souza' })).toBeInTheDocument()
+    })
+  })
+
+  describe('troca de rota com a tela montada', () => {
+    it('detalhe: ao trocar de id não mostra o cliente anterior nem o erro anterior', async () => {
+      fetchMock.mockImplementation(async (url: string) =>
+        url.endsWith('/c1')
+          ? resposta(200, { ...ana, contratos: [] })
+          : new Promise<Response>(() => {}),
+      )
+      renderizarComLinks('/clientes/c1', '/clientes/c2')
+      expect(await screen.findByRole('heading', { name: 'Ana Souza' })).toBeInTheDocument()
+
+      await userEvent.setup().click(screen.getByRole('link', { name: 'ir para outro' }))
+
+      expect(await screen.findByText('Carregando...')).toBeInTheDocument()
+      expect(screen.queryByRole('heading', { name: 'Ana Souza' })).not.toBeInTheDocument()
+    })
+
+    it('formulário: ir da edição para "novo" traz os campos vazios', async () => {
+      fetchMock.mockImplementation(async () => resposta(200, { ...ana, contratos: [] }))
+      renderizarComLinks('/clientes/c1/editar', '/clientes/novo')
+      expect(await screen.findByDisplayValue('Ana Souza')).toBeInTheDocument()
+
+      await userEvent.setup().click(screen.getByRole('link', { name: 'ir para outro' }))
+
+      expect(await screen.findByRole('heading', { name: 'Novo cliente' })).toBeInTheDocument()
+      expect(screen.queryByDisplayValue('Ana Souza')).not.toBeInTheDocument()
     })
   })
 
