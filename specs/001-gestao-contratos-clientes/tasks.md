@@ -106,7 +106,7 @@ usuário do seed (vê o menu), sair (volta ao login).
 
 - [X] T032 [US1] Criar `backend/src/modules/auth/servico-auth.ts`: login com usuário em minúsculas, regra de bloqueio "falha → `tentativasFalhas += 1`; se `tentativasFalhas == 5` → `bloqueadoAte = agora + 15 min`; tentativa com `bloqueadoAte > agora` → recusada (sem alterar contadores); sucesso → `tentativasFalhas = 0`, `bloqueadoAte = nulo`"
 - [X] T033 [US1] Criar `backend/src/modules/auth/rotas-auth.ts` com `POST /api/auth/login` (público), `POST /api/auth/logout` e mover `GET /api/auth/sessao` para cá; registrar em `backend/src/app.ts` até T028 e T029 passarem
-- [ ] T034 [US1] Criar `frontend/src/features/auth/tela-login.tsx` (Form + Input + Button do shadcn/ui, validação zod de campos obrigatórios) até T030 passar
+- [X] T034 [US1] Criar `frontend/src/features/auth/tela-login.tsx` (Form + Input + Button do shadcn/ui, validação zod de campos obrigatórios) até T030 passar
 - [ ] T035 [US1] Criar `frontend/src/features/auth/rota-protegida.tsx` (consulta `/api/auth/sessao`, redireciona para `/login` sem sessão ou ao receber `sessao-expirada`, expõe o usuário por contexto) e o botão "Sair" no `frontend/src/components/layout/layout-app.tsx` até T031 passar
 
 **Checkpoint**: História 1 funcional e testável sozinha.
