@@ -236,3 +236,71 @@ describe('FR-031: substituir o PDF pelo PUT descarta a análise', () => {
     expect(await prisma.analiseContrato.count({ where: { contratoId: contrato.id } })).toBe(0);
   });
 });
+
+describe('PUT com PDF novo durante a análise em curso', () => {
+  // Tempo-limite folgado: aqui o dublê espera o teste, que faz um PUT no meio.
+  const appLongo = criarApp({ clienteIA: { analisarContrato }, tempoLimiteIaMs: 10_000 });
+  const analisar = (id: string) => request(appLongo).post(`/api/contratos/${id}/analise`).set('Cookie', cookie);
+
+  function trocarPdf(id: string) {
+    return request(appLongo)
+      .put(`/api/contratos/${id}`)
+      .set('Cookie', cookie)
+      .field('titulo', 'Título Novo')
+      .field('dataAssinatura', '2025-04-20')
+      .field('clienteId', clienteId)
+      .attach('arquivo', pdfValido('trocado'), { filename: 'novo.pdf', contentType: 'application/pdf' });
+  }
+
+  it('a análise do PDF antigo é descartada (409) e não é gravada', async () => {
+    const contrato = await criarContratoComPdf();
+    let liberar!: (r: ResultadoIA) => void;
+    analisarContrato.mockImplementationOnce(
+      () =>
+        new Promise<ResultadoIA>((ok) => {
+          liberar = ok;
+        }),
+    );
+
+    const andamento = analisar(contrato.id).then((r) => r);
+    await vi.waitFor(() => expect(analisarContrato).toHaveBeenCalledTimes(1));
+    expect((await trocarPdf(contrato.id)).status).toBe(200);
+    liberar(sucesso('Do PDF antigo'));
+    const res = await andamento;
+
+    expect(res.status).toBe(409);
+    expect(res.body.erro.codigo).toBe('ANALISE_EM_ANDAMENTO');
+    expect(await prisma.analiseContrato.count({ where: { contratoId: contrato.id } })).toBe(0);
+    expect((await detalhe(contrato.id)).body.analiseEmAndamento).toBe(false);
+  });
+
+  it('não libera a trava de uma segunda análise iniciada depois do PUT', async () => {
+    const contrato = await criarContratoComPdf();
+    let liberarPrimeira!: (r: ResultadoIA) => void;
+    let liberarSegunda!: (r: ResultadoIA) => void;
+    analisarContrato.mockImplementationOnce(
+      () => new Promise<ResultadoIA>((ok) => { liberarPrimeira = ok; }),
+    );
+    analisarContrato.mockImplementationOnce(
+      () => new Promise<ResultadoIA>((ok) => { liberarSegunda = ok; }),
+    );
+
+    const primeira = analisar(contrato.id).then((r) => r);
+    await vi.waitFor(() => expect(analisarContrato).toHaveBeenCalledTimes(1));
+    await trocarPdf(contrato.id);
+    const segunda = analisar(contrato.id).then((r) => r);
+    await vi.waitFor(() => expect(analisarContrato).toHaveBeenCalledTimes(2));
+
+    liberarPrimeira(sucesso('Antiga'));
+    expect((await primeira).status).toBe(409);
+    // A trava da segunda continua de pé e nada foi gravado.
+    expect((await detalhe(contrato.id)).body.analiseEmAndamento).toBe(true);
+    expect(await prisma.analiseContrato.count({ where: { contratoId: contrato.id } })).toBe(0);
+
+    liberarSegunda(sucesso('Do PDF novo'));
+    const res = await segunda;
+    expect(res.status).toBe(200);
+    expect(res.body.resumo).toBe('Do PDF novo');
+    expect((await detalhe(contrato.id)).body.analiseEmAndamento).toBe(false);
+  });
+});

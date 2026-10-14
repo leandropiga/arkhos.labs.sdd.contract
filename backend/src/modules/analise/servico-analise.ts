@@ -115,13 +115,30 @@ export async function analisarContrato(
       clausulasCriticas: resultado.clausulasCriticas,
       geradaEm: new Date(),
     };
-    const gravada = await prisma.analiseContrato.upsert({
-      where: { contratoId: id },
-      create: { contratoId: id, ...dados },
-      update: dados,
+    // Só grava se a trava ainda é a nossa (o carimbo `agora`). Se um PUT trocou o PDF no meio
+    // da análise, ele zerou a trava: o resultado é do PDF antigo e é descartado. Confirmar a
+    // trava e gravar na mesma transação evita a janela entre uma coisa e outra.
+    return await prisma.$transaction(async (tx) => {
+      const aindaNossa = await tx.contrato.updateMany({
+        where: { id, analiseIniciadaEm: agora },
+        data: { analiseIniciadaEm: null },
+      });
+      if (aindaNossa.count === 0) {
+        throw new ErroApp(
+          409,
+          'ANALISE_EM_ANDAMENTO',
+          'O PDF do contrato mudou durante a análise e o resultado foi descartado. Analise novamente.',
+        );
+      }
+      const gravada = await tx.analiseContrato.upsert({
+        where: { contratoId: id },
+        create: { contratoId: id, ...dados },
+        update: dados,
+      });
+      return paraAnaliseDto(gravada);
     });
-    return paraAnaliseDto(gravada);
   } finally {
-    await prisma.contrato.updateMany({ where: { id }, data: { analiseIniciadaEm: null } });
+    // Libera só a própria trava: a de outra análise (carimbo diferente) fica como está.
+    await prisma.contrato.updateMany({ where: { id, analiseIniciadaEm: agora }, data: { analiseIniciadaEm: null } });
   }
 }
