@@ -4,6 +4,7 @@ import { ErroApp } from './http/erros.js';
 import { middlewareErros } from './http/middleware-erros.js';
 import { rotasAuth } from './modules/auth/rotas-auth.js';
 import { rotasClientes } from './modules/clientes/rotas-clientes.js';
+import { rotasContratos } from './modules/contratos/rotas-contratos.js';
 
 /** Fábrica do app Express: devolve um app novo a cada chamada, sem chamar listen. */
 export function criarApp(): Express {
@@ -19,6 +20,7 @@ export function criarApp(): Express {
   // Daqui para baixo, toda rota sob /api exige sessão.
   api.use(exigirSessao);
   api.use('/clientes', rotasClientes);
+  api.use('/contratos', rotasContratos);
   api.use((_req, _res, next) => {
     next(new ErroApp(404, 'NAO_ENCONTRADO', 'Recurso não encontrado.'));
   });
