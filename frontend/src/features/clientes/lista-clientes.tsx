@@ -99,7 +99,7 @@ export function ListaClientes() {
 
       {erro && <FieldError>{erro}</FieldError>}
 
-      {!dados && !erro && <p>Carregando...</p>}
+      {carregando && <p role="status">Carregando...</p>}
 
       {dados && dados.itens.length === 0 && <p>Nenhum cliente encontrado.</p>}
 

@@ -112,7 +112,7 @@ export function ListaContratos() {
 
       {erro && <FieldError>{erro}</FieldError>}
 
-      {!dados && !erro && <p>Carregando...</p>}
+      {carregando && <p role="status">Carregando...</p>}
 
       {dados && dados.itens.length === 0 && <p>Nenhum contrato encontrado.</p>}
 
