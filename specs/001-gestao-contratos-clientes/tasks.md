@@ -136,7 +136,7 @@ nenhum contrato.
 - [X] T043 [US2] Criar `backend/src/modules/clientes/rotas-clientes.ts` (`GET/POST /api/clientes`, `GET/PUT/DELETE /api/clientes/:id`, todas autenticadas) e registrar em `backend/src/app.ts` até T037–T039 passarem
 - [X] T044 [P] [US2] Criar `frontend/src/features/clientes/lista-clientes.tsx` (Table + Pagination do shadcn/ui, filtros por nome e CPF, estado vazio)
 - [X] T045 [P] [US2] Criar `frontend/src/features/clientes/form-cliente.tsx` (Form do shadcn/ui com Nome Completo, Telefone, CPF, RG, Logradouro, Número, CEP, Cidade e UF em lista; mostra erros de `campos`; serve para criar e editar)
-- [ ] T046 [US2] Criar `frontend/src/features/clientes/detalhe-cliente.tsx` (dados do cliente, lista de contratos vinculados, botão excluir com AlertDialog e exibição do `409`) e ligar as rotas `/clientes`, `/clientes/novo`, `/clientes/:id`, `/clientes/:id/editar` em `frontend/src/rotas.tsx` até T040 passar
+- [X] T046 [US2] Criar `frontend/src/features/clientes/detalhe-cliente.tsx` (dados do cliente, lista de contratos vinculados, botão excluir com AlertDialog e exibição do `409`) e ligar as rotas `/clientes`, `/clientes/novo`, `/clientes/:id`, `/clientes/:id/editar` em `frontend/src/rotas.tsx` até T040 passar
 
 **Checkpoint**: Histórias 1 e 2 funcionam de forma independente.
 
