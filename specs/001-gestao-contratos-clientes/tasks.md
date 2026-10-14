@@ -160,7 +160,7 @@ e o PDF.
 ### Implementação da História 3
 
 - [X] T051 [P] [US3] Criar `backend/src/lib/armazenamento.ts`: `salvarDoTemporario(caminhoTmp, id)` (`fs.rename` para `STORAGE_DIR/<id>.pdf`), `caminhoDoPdf(id)`, `removerPdf(id)`
-- [ ] T052 [US3] Criar `backend/src/http/upload.ts`: multer `diskStorage` em `UPLOAD_TMP_DIR`, `limits.fileSize` de 52.428.800 bytes (erro do multer → `413 ARQUIVO_MUITO_GRANDE`), verificação de `%PDF-` nos primeiros bytes e `%%EOF` nos últimos 1.024 bytes (→ `400 ARQUIVO_INVALIDO`) e remoção do temporário em `finally`, com ou sem erro
+- [X] T052 [US3] Criar `backend/src/http/upload.ts`: multer `diskStorage` em `UPLOAD_TMP_DIR`, `limits.fileSize` de 52.428.800 bytes (erro do multer → `413 ARQUIVO_MUITO_GRANDE`), verificação de `%PDF-` nos primeiros bytes e `%%EOF` nos últimos 1.024 bytes (→ `400 ARQUIVO_INVALIDO`) e remoção do temporário em `finally`, com ou sem erro
 - [ ] T053 [US3] Criar `backend/src/modules/contratos/esquemas-contratos.ts` e `backend/src/modules/contratos/servico-contratos.ts` (criar, editar com substituição opcional do PDF — apagando arquivo antigo e análise (FR-031) —, excluir apagando arquivo, buscar, listar com filtros e paginação de 20)
 - [ ] T054 [US3] Criar `backend/src/modules/contratos/rotas-contratos.ts` (`GET/POST /api/contratos`, `GET/PUT/DELETE /api/contratos/:id`, `GET /api/contratos/:id/arquivo`) e registrar em `backend/src/app.ts` até T047–T049 passarem
 - [ ] T055 [P] [US3] Criar `frontend/src/features/contratos/lista-contratos.tsx` (Table + Pagination, filtro de título e período com dois `Input type="date"` do shadcn/ui (nativo; dispensa react-day-picker e date-fns), estado vazio)
