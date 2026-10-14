@@ -5,6 +5,9 @@ import { LayoutApp } from '@/components/layout/layout-app'
 import { ListaClientes } from '@/features/clientes/lista-clientes'
 import { FormCliente } from '@/features/clientes/form-cliente'
 import { DetalheCliente } from '@/features/clientes/detalhe-cliente'
+import { ListaContratos } from '@/features/contratos/lista-contratos'
+import { FormContrato } from '@/features/contratos/form-contrato'
+import { DetalheContrato } from '@/features/contratos/detalhe-contrato'
 
 // Placeholders: as telas reais chegam nas tarefas das histórias de usuário.
 const Pagina = ({ titulo }: { titulo: string }) => <h1 className="text-2xl font-bold">{titulo}</h1>
@@ -20,7 +23,10 @@ export function Rotas() {
           <Route path="/clientes/novo" element={<FormCliente />} />
           <Route path="/clientes/:id" element={<DetalheCliente />} />
           <Route path="/clientes/:id/editar" element={<FormCliente />} />
-          <Route path="/contratos/*" element={<Pagina titulo="Contratos" />} />
+          <Route path="/contratos" element={<ListaContratos />} />
+          <Route path="/contratos/novo" element={<FormContrato />} />
+          <Route path="/contratos/:id" element={<DetalheContrato />} />
+          <Route path="/contratos/:id/editar" element={<FormContrato />} />
           <Route path="/perfil" element={<Pagina titulo="Perfil" />} />
         </Route>
       </Route>
