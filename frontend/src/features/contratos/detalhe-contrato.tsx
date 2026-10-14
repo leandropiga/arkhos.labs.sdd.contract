@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router'
 import { api, ErroApi } from '@/lib/api'
 import {
@@ -29,6 +29,8 @@ export function DetalheContrato() {
   const [contrato, setContrato] = useState<ContratoDetalhe | null>(null)
   const [erro, setErro] = useState<string | null>(null)
   const [erroExclusao, setErroExclusao] = useState<string | null>(null)
+  const [excluindo, setExcluindo] = useState(false)
+  const excluindoRef = useRef(false) // trava síncrona contra cliques repetidos
 
   useEffect(() => {
     let ativo = true
@@ -48,12 +50,18 @@ export function DetalheContrato() {
   }, [id])
 
   async function excluir() {
+    if (excluindoRef.current) return
+    excluindoRef.current = true
+    setExcluindo(true)
     setErroExclusao(null)
     try {
       await api(`/api/contratos/${id}`, { metodo: 'DELETE' })
       navegar('/contratos')
     } catch (e) {
       setErroExclusao(e instanceof ErroApi ? e.mensagem : 'Não foi possível excluir o contrato.')
+    } finally {
+      excluindoRef.current = false
+      setExcluindo(false)
     }
   }
 
@@ -70,7 +78,9 @@ export function DetalheContrato() {
           </Button>
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="destructive">Excluir contrato</Button>
+              <Button variant="destructive" disabled={excluindo}>
+                Excluir contrato
+              </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
