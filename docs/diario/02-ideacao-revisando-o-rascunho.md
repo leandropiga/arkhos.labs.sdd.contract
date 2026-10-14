@@ -2,7 +2,7 @@
 
 - **Data:** 2026-10-14
 - **Fase:** 1 — Ideação
-- **Status:** em andamento (faltam 3 decisões, ver "Próximo passo")
+- **Status:** concluída (decisões pendentes fechadas no [diário 03](./03-ideacao-decisoes-finais.md))
 
 ## Objetivo
 

@@ -43,9 +43,14 @@ nesta versão.
 O rascunho planeja estas "surpresas" para mostrar como o SDD lida com mudanças:
 
 1. **Na especificação** (`/speckit-clarify`): o endereço vira campos separados (logradouro,
-   número, CEP, cidade, UF), o PDF fica limitado a 5 MB e a IA tem timeout de 15 s com aviso
+   número, CEP, cidade, UF), o PDF fica limitado a **100 MB** e a IA tem timeout de 15 s com aviso
    (toast).
-2. **Depois da implementação**: o painel passa a mostrar o "total de análises por IA nos últimos
+   > ⚠️ **Erro encenado:** os 100 MB são de propósito. O Gemini aceita no máximo 50 MB por PDF.
+   > Queremos que esse conflito apareça como bug mais tarde
+   > ([ADR 0005](../decisoes/0005-bugs-reais-e-bug-encenado.md)). O rascunho original usava 5 MB.
+2. **Na implementação**: um PDF grande faz a análise falhar e o bug é tratado pelo fluxo
+   `/speckit-bug-assess` → `/speckit-bug-fix` → `/speckit-bug-test`.
+3. **Depois da implementação**: o painel passa a mostrar o "total de análises por IA nos últimos
    30 dias", o que exige guardar o histórico de análises (spec → analyze → migration).
 
 ## Perguntas em aberto (vão para a especificação)

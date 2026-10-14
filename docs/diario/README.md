@@ -7,4 +7,5 @@ Registro cronológico de cada etapa do laboratório. Cada entrada segue o
 |---|-------|------|--------|
 | 00 | [Setup do laboratório](./00-setup-do-laboratorio.md) | 0 — Setup | concluída |
 | 01 | [Conectando o Claude Code ao GitHub](./01-conectando-claude-ao-github.md) | 0 — Setup | concluída |
-| 02 | [Ideação: revisando o rascunho](./02-ideacao-revisando-o-rascunho.md) | 1 — Ideação | em andamento |
+| 02 | [Ideação: revisando o rascunho](./02-ideacao-revisando-o-rascunho.md) | 1 — Ideação | concluída |
+| 03 | [Ideação: decisões finais](./03-ideacao-decisoes-finais.md) | 1 — Ideação | concluída |
