@@ -80,7 +80,7 @@ implementada, testada e demonstrada sozinha.
 - [X] T023 Criar `backend/src/app.ts` (Express, `express.json()`, rotas sob `/api`, `GET /api/auth/sessao` protegida, 404 padronizado, middleware de erros por último) e `backend/src/server.ts` (sobe `app` na `PORT`) até T015 passar
 - [X] T024 Criar `backend/prisma/seed.ts`: cria (ou atualiza) o usuário a partir de `SEED_USUARIO`/`SEED_SENHA`, com senha em hash e `nome` igual ao usuário
 - [X] T025 Criar a infraestrutura de testes do backend: `backend/tests/setup/global-setup.ts` (carrega `.env.test` com `process.loadEnvFile` e roda `prisma migrate deploy`), `backend/tests/setup/limpar-banco.ts` (apaga todas as tabelas antes de cada arquivo) e `backend/tests/helpers/sessao.ts` (`criarUsuarioELogar()` devolve o cabeçalho `Cookie` válido para o supertest)
-- [ ] T026 [P] Criar `frontend/src/lib/api.ts` (`fetch` com `credentials: "same-origin"`, JSON, conversão do erro padronizado em `ErroApi`, emissão do evento `sessao-expirada` em `401` exceto no login) até T016 passar
+- [X] T026 [P] Criar `frontend/src/lib/api.ts` (`fetch` com `credentials: "same-origin"`, JSON, conversão do erro padronizado em `ErroApi`, emissão do evento `sessao-expirada` em `401` exceto no login) até T016 passar
 - [ ] T027 Criar a casca do frontend: `frontend/src/main.tsx` (Router + `<Toaster />` do shadcn/ui), `frontend/src/rotas.tsx` (rotas `/login`, `/`, `/clientes/*`, `/contratos/*`, `/perfil`) e `frontend/src/components/layout/layout-app.tsx` com o menu lateral (Sidebar do shadcn/ui) com Home, Clientes e Contratos (FR-032)
 
 **Checkpoint**: a API responde no formato padronizado, existe um usuário via seed e o frontend
