@@ -67,7 +67,7 @@ implementada, testada e demonstrada sozinha.
 - [X] T013 [P] Teste unitário de JWT e cookies em `backend/tests/unit/jwt-cookies.test.ts`: token assinado expira em 8 h; token adulterado ou expirado é recusado; `lerCookie(cabecalho, "sessao")` extrai o valor; o cookie gerado tem `HttpOnly`, `SameSite=Lax`, `Path=/`, `Max-Age=28800` e `Secure` só fora de `development`
 - [X] T014 [P] Teste unitário de normalização em `backend/tests/unit/texto-busca.test.ts`: `"José ÁLVARES"` → `"jose alvares"`
 - [X] T015 [P] Teste HTTP em `backend/tests/http/sessao.test.ts`: `GET /api/auth/sessao` sem cookie → `401 NAO_AUTENTICADO`; com cookie válido → `200 { usuario: Perfil }`; rota inexistente sob `/api` → `404 NAO_ENCONTRADO` no formato padronizado
-- [ ] T016 [P] Teste do cliente HTTP do frontend em `frontend/tests/lib/api.test.ts`: resposta 2xx devolve o JSON; resposta de erro lança `ErroApi` com `status`, `codigo`, `mensagem` e `campos`; resposta `401` de qualquer rota, exceto `POST /api/auth/login`, dispara o evento `sessao-expirada`
+- [X] T016 [P] Teste do cliente HTTP do frontend em `frontend/tests/lib/api.test.ts`: resposta 2xx devolve o JSON; resposta de erro lança `ErroApi` com `status`, `codigo`, `mensagem` e `campos`; resposta `401` de qualquer rota, exceto `POST /api/auth/login`, dispara o evento `sessao-expirada`
 
 ### Implementação da fundação
 
