@@ -33,8 +33,13 @@ export async function api<T = unknown>(caminho: string, opcoes: Opcoes = {}): Pr
   const metodo = opcoes.metodo ?? 'GET'
   const init: RequestInit = { method: metodo, credentials: 'same-origin' }
   if (opcoes.corpo !== undefined) {
-    init.headers = { 'Content-Type': 'application/json' }
-    init.body = JSON.stringify(opcoes.corpo)
+    if (opcoes.corpo instanceof FormData) {
+      // multipart: o navegador define o Content-Type (com o boundary).
+      init.body = opcoes.corpo
+    } else {
+      init.headers = { 'Content-Type': 'application/json' }
+      init.body = JSON.stringify(opcoes.corpo)
+    }
   }
 
   let resposta: Response

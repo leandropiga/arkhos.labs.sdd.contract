@@ -57,16 +57,21 @@ export async function inserirCliente(serie: number, nomeCompleto: string, cpf = 
   });
 }
 
-/** Insere um contrato direto pelo Prisma (sem arquivo real em disco). */
-export async function inserirContrato(clienteId: string, titulo: string, dataAssinatura: string) {
+/** Insere um contrato direto pelo Prisma (sem arquivo real em disco, a menos que `arquivo` diga o contrário). */
+export async function inserirContrato(
+  clienteId: string,
+  titulo: string,
+  dataAssinatura: string,
+  arquivo: { nome?: string; tamanho?: number } = {},
+) {
   return prisma.contrato.create({
     data: {
       titulo,
       tituloBusca: titulo.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase(),
       dataAssinatura: new Date(`${dataAssinatura}T00:00:00.000Z`),
       clienteId,
-      arquivoNomeOriginal: `${titulo}.pdf`,
-      arquivoTamanhoBytes: 1024,
+      arquivoNomeOriginal: arquivo.nome ?? `${titulo}.pdf`,
+      arquivoTamanhoBytes: arquivo.tamanho ?? 1024,
     },
   });
 }

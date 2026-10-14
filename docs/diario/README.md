@@ -18,3 +18,4 @@ Registro cronológico de cada etapa do laboratório. Cada entrada segue o
 | 10 | [Conferindo a coerência antes do código](./10-analise.md) | 4 — Quebra em tarefas | concluída |
 | 11 | [Implementação, rodada 1: o MVP de login (T001–T035)](./11-implementacao-rodada-1.md) | 5 — Implementação | concluída |
 | 12 | [Implementação, rodada 2: cadastro de clientes (T036–T046)](./12-implementacao-rodada-2.md) | 5 — Implementação | concluída |
+| 13 | [Implementação, rodada 3: contratos com PDF (T047–T057)](./13-implementacao-rodada-3.md) | 5 — Implementação | concluída |
