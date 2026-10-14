@@ -12,3 +12,4 @@ Cada arquivo registra uma escolha: o contexto, as opções e o porquê. Modelo e
 | 0005 | [Registrar bugs reais e encenar um bug com o Gemini](./0005-bugs-reais-e-bug-encenado.md) | aceita |
 | 0006 | [Usar Vitest no backend e no frontend](./0006-vitest-no-backend-e-frontend.md) | aceita |
 | 0007 | [Tutorial somente com Claude Code](./0007-tutorial-somente-claude-code.md) | aceita |
+| 0008 | [Instalar o Superpowers pelo marketplace do autor (v7)](./0008-superpowers-pelo-marketplace-do-autor.md) | aceita |

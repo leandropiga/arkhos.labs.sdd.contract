@@ -50,6 +50,7 @@ Ao gerar prompts a partir do `TUTORIAL_DRAFT.md`, aplicar os ADRs:
 - 0005: no `/speckit-clarify`, o limite do PDF é **100 MB** (não 5 MB). Não revelar ao agente o
   limite de 50 MB do Gemini.
 - 0006: Vitest no backend e no frontend (não Jest).
+- 0008: Superpowers v7 via `superpowers@superpowers-marketplace` (não o marketplace oficial).
 
 ## Git e GitHub
 
