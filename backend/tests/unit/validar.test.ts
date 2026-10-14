@@ -62,4 +62,17 @@ describe('validar', () => {
       erro: { codigo: 'VALIDACAO_INVALIDA', mensagem: 'O corpo da requisição não é um JSON válido.' },
     });
   });
+
+  it('mensagens padrão do zod (sem mensagem própria) saem em português', async () => {
+    const res = await request(criarApp()).get('/consulta?pagina=abc');
+    const ausente = await request(criarApp()).post('/corpo').send({ idade: '1' });
+    expect(res.status).toBe(400);
+    expect(ausente.status).toBe(400);
+    for (const corpo of [res.body, ausente.body]) {
+      for (const { mensagem } of corpo.erro.campos) {
+        expect(mensagem).not.toMatch(/invalid|expected|received|too small/i);
+      }
+    }
+    expect(res.body.erro.campos[0].mensagem).toMatch(/inválid|esperado/i);
+  });
 });

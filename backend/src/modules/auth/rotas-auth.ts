@@ -8,8 +8,8 @@ import { assinarToken } from '../../lib/jwt.js';
 import { entrar } from './servico-auth.js';
 
 const esquemaLogin = z.object({
-  usuario: z.string().min(1, 'Informe o usuário.'),
-  senha: z.string().min(1, 'Informe a senha.'),
+  usuario: z.string({ error: 'Informe o usuário.' }).min(1, 'Informe o usuário.'),
+  senha: z.string({ error: 'Informe a senha.' }).min(1, 'Informe a senha.'),
 });
 
 /** Rotas de /api/auth. Só o login é público; as demais passam por exigirSessao. */

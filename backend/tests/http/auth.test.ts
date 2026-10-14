@@ -104,6 +104,22 @@ describe('POST /api/auth/login', () => {
       ]),
     );
   });
+
+  it('campos ausentes ou de tipo errado têm mensagens em português, sem texto da biblioteca', async () => {
+    const ausentes = await request(criarApp()).post('/api/auth/login').send({});
+    const tipoErrado = await request(criarApp())
+      .post('/api/auth/login')
+      .send({ usuario: 123, senha: ['x'] });
+
+    for (const res of [ausentes, tipoErrado]) {
+      expect(res.status).toBe(400);
+      expect(res.body.erro.campos).toEqual([
+        { campo: 'usuario', mensagem: 'Informe o usuário.' },
+        { campo: 'senha', mensagem: 'Informe a senha.' },
+      ]);
+      expect(JSON.stringify(res.body)).not.toMatch(/invalid input|expected|received/i);
+    }
+  });
 });
 
 describe('POST /api/auth/logout', () => {

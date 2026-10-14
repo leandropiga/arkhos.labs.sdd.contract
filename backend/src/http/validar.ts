@@ -1,5 +1,9 @@
 import type { RequestHandler } from 'express';
-import type { ZodType } from 'zod';
+import { z, type ZodType } from 'zod';
+
+// Mensagens padrão do zod em português (contracts/api.md: nada de texto de biblioteca em
+// `campos[].mensagem`). Configuração global, aplicada ao carregar o módulo que valida as rotas.
+z.config(z.locales.ptBR());
 
 interface EsquemasValidacao {
   corpo?: ZodType;
