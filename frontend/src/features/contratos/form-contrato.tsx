@@ -3,6 +3,7 @@ import { useForm, type Path } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Link, useNavigate, useParams } from 'react-router'
+import { useAtrasado } from '@/lib/use-atrasado'
 import { api, ErroApi } from '@/lib/api'
 import { Button } from '@/components/ui/button'
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
@@ -34,15 +35,6 @@ function criarEsquema(edicao: boolean) {
 }
 
 const CAMPOS_CONHECIDOS = ['titulo', 'dataAssinatura', 'clienteId', 'arquivo']
-
-function useAtrasado(valor: string, atrasoMs: number) {
-  const [atrasado, setAtrasado] = useState(valor)
-  useEffect(() => {
-    const id = setTimeout(() => setAtrasado(valor), atrasoMs)
-    return () => clearTimeout(id)
-  }, [valor, atrasoMs])
-  return atrasado
-}
 
 function Formulario({ id, inicial }: { id?: string; inicial: ContratoDetalhe | null }) {
   const navegar = useNavigate()
