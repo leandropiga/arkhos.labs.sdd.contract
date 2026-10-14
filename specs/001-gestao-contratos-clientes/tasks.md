@@ -63,7 +63,7 @@ implementada, testada e demonstrada sozinha.
 ### Testes da fundação (escrever primeiro e ver falhar)
 
 - [X] T011 [P] Teste unitário de `ErroApp` e do middleware de erros em `backend/tests/unit/middleware-erros.test.ts`: `ErroApp` vira o JSON do contrato com o status certo; `ZodError` vira `400 VALIDACAO_INVALIDA` com `campos`; erro desconhecido vira `500 ERRO_INTERNO` com mensagem genérica e **sem** stack, SQL ou caminho de arquivo
-- [ ] T012 [P] Teste unitário de senha em `backend/tests/unit/senha.test.ts`: `gerarHash` produz valores diferentes para a mesma senha (sal aleatório); `verificarSenha` aceita a certa e recusa a errada
+- [X] T012 [P] Teste unitário de senha em `backend/tests/unit/senha.test.ts`: `gerarHash` produz valores diferentes para a mesma senha (sal aleatório); `verificarSenha` aceita a certa e recusa a errada
 - [ ] T013 [P] Teste unitário de JWT e cookies em `backend/tests/unit/jwt-cookies.test.ts`: token assinado expira em 8 h; token adulterado ou expirado é recusado; `lerCookie(cabecalho, "sessao")` extrai o valor; o cookie gerado tem `HttpOnly`, `SameSite=Lax`, `Path=/`, `Max-Age=28800` e `Secure` só fora de `development`
 - [ ] T014 [P] Teste unitário de normalização em `backend/tests/unit/texto-busca.test.ts`: `"José ÁLVARES"` → `"jose alvares"`
 - [ ] T015 [P] Teste HTTP em `backend/tests/http/sessao.test.ts`: `GET /api/auth/sessao` sem cookie → `401 NAO_AUTENTICADO`; com cookie válido → `200 { usuario: Perfil }`; rota inexistente sob `/api` → `404 NAO_ENCONTRADO` no formato padronizado
