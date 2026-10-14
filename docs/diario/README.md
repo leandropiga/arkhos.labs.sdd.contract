@@ -11,3 +11,4 @@ Registro cronológico de cada etapa do laboratório. Cada entrada segue o
 | 03 | [Ideação: decisões finais](./03-ideacao-decisoes-finais.md) | 1 — Ideação | concluída |
 | 04 | [Instalando o Spec Kit e o Superpowers](./04-instalando-spec-kit-e-superpowers.md) | 2 — Especificação | concluída |
 | 05 | [Escrevendo a constituição](./05-constituicao.md) | 2 — Especificação | concluída |
+| 06 | [Escrevendo a especificação](./06-especificacao.md) | 2 — Especificação | concluída |
