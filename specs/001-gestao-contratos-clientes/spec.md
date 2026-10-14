@@ -12,6 +12,21 @@ venda). Quem usa é um(a) operador(a) administrativo(a) de uma pequena empresa, 
 contratos em pastas e e-mails e tem dificuldade para encontrá-los, contá-los e lembrar dos riscos
 de cada um." (texto completo em `docs/prompts/05-especificacao.md`)
 
+## Clarifications
+
+### Session 2026-10-14
+
+- Q: Como o endereço do cliente deve ser guardado, já que o gráfico da Home precisa da UF de cada
+  cliente? → A: Dividido em Logradouro, Número, CEP, Cidade e UF, todos obrigatórios.
+- Q: Qual é o tamanho máximo permitido para o arquivo PDF de um contrato? → A: 100 MB.
+- Q: Quanto tempo esperar pela análise da IA e como avisar quando ela falhar ou demorar demais?
+  → A: 15 segundos; aviso não bloqueante (toast) informando que o serviço de análise está
+  temporariamente indisponível.
+- Q: O que acontece ao tentar excluir um cliente que tem contratos? → A: A exclusão é bloqueada
+  enquanto houver contratos, com mensagem informando quantos existem.
+- Q: O que fazer quando alguém erra a senha várias vezes seguidas? → A: Após 5 tentativas
+  erradas seguidas, bloquear novas tentativas para aquele usuário por 15 minutos.
+
 ## Cenários de Usuário e Testes *(obrigatório)*
 
 ### História de Usuário 1 - Entrar no sistema (Prioridade: P1)
@@ -36,6 +51,9 @@ entrar com credenciais válidas (deve ver o menu) e sair (deve voltar ao login).
    **Então** é levada à tela de login.
 4. **Dado** um usuário logado, **Quando** escolhe sair, **Então** a sessão termina e as telas
    internas deixam de ser acessíveis.
+5. **Dado** um usuário que errou a senha 5 vezes seguidas, **Quando** tenta entrar de novo
+   antes de 15 minutos, mesmo com a senha correta, **Então** o acesso é recusado com um aviso de
+   bloqueio temporário; depois de 15 minutos, consegue entrar normalmente.
 
 ---
 
@@ -66,6 +84,8 @@ sem cadastrar nenhum contrato.
    aparecem apenas os clientes com aquele CPF.
 7. **Dado** um cliente sem contratos, **Quando** ele é consultado, **Então** o sistema o exibe
    normalmente, sem exigir contratos vinculados.
+8. **Dado** um cliente com contratos, **Quando** se tenta excluí-lo, **Então** a exclusão é
+   bloqueada e a mensagem informa quantos contratos estão vinculados a ele.
 
 ---
 
@@ -125,8 +145,9 @@ mostra o resumo, sair da tela, voltar e verificar que o resumo continua lá.
    último resultado da análise continua visível, com a data em que foi gerado.
 4. **Dado** um contrato já analisado, **Quando** uma nova análise é solicitada e conclui com
    sucesso, **Então** o novo resultado substitui o anterior no painel.
-5. **Dado** uma análise em andamento, **Quando** o serviço de IA falha, **Então** o(a)
-   operador(a) vê uma mensagem amigável, sem detalhes técnicos, e pode tentar de novo; um
+5. **Dado** uma análise em andamento, **Quando** o serviço de IA falha ou não responde em 15
+   segundos, **Então** o(a) operador(a) vê um aviso não bloqueante (toast) dizendo que o serviço
+   de análise está temporariamente indisponível, sem detalhes técnicos, e pode tentar de novo; um
    resultado anterior, se existir, continua visível.
 
 ---
@@ -176,9 +197,11 @@ novos dados aparecem (nome e foto no menu).
 
 ### Casos Extremos
 
-- O que acontece com os contratos de um cliente quando esse cliente é excluído? (ver FR-010)
-- Qual é o tamanho máximo aceito para o arquivo PDF do contrato? (ver FR-017)
-- Como saber o estado (UF) de um cliente, se o endereço é um campo único? (ver FR-007)
+- Tentativa de excluir um cliente que tem contratos: a exclusão é bloqueada e a mensagem informa
+  quantos contratos existem (FR-010). Para excluir o cliente, é preciso excluir os contratos
+  antes.
+- Um PDF acima de 100 MB é recusado no cadastro (e na substituição do arquivo), com uma
+  mensagem informando o limite (FR-017).
 - Um arquivo com extensão `.pdf` que não é de fato um PDF (ou está corrompido) é recusado no
   cadastro, como qualquer outro formato inválido.
 - Um PDF sem texto extraível (por exemplo, só imagens escaneadas) ou protegido por senha: a
@@ -202,7 +225,9 @@ novos dados aparecem (nome e foto no menu).
 - **FR-001**: O sistema DEVE exigir login com usuário e senha para acessar qualquer tela ou dado,
   exceto a própria tela de login.
 - **FR-002**: O sistema DEVE recusar credenciais inválidas com uma mensagem genérica, sem revelar
-  se o usuário existe.
+  se o usuário existe. Após 5 tentativas erradas seguidas para o mesmo usuário, o sistema DEVE
+  recusar novas tentativas desse usuário por 15 minutos, mesmo com a senha correta, informando
+  que o acesso está temporariamente bloqueado. Um login bem-sucedido zera a contagem.
 - **FR-003**: O sistema DEVE permitir que a pessoa logada saia (encerre a sessão).
 - **FR-004**: O sistema DEVE encerrar a sessão automaticamente após 8 horas, exigindo novo login.
 - **FR-005**: O sistema DEVE oferecer um Menu de Perfil em que a pessoa logada edita Nome, URL da
@@ -213,16 +238,16 @@ novos dados aparecem (nome e foto no menu).
 **Clientes**
 
 - **FR-007**: O sistema DEVE permitir cadastrar clientes com os campos obrigatórios Nome Completo,
-  Telefone, Endereço, CPF e RG. [NEEDS CLARIFICATION: o Endereço é um campo de texto único,
-  mas o gráfico da Home (FR-033) precisa da UF de cada cliente. O endereço deve ser dividido em
-  partes (com a UF como campo próprio) ou a UF deve ser um campo adicional?]
+  Telefone, Endereço, CPF e RG. O Endereço é composto por Logradouro, Número, CEP, Cidade e UF,
+  todos obrigatórios. O CEP DEVE ter 8 dígitos (com ou sem hífen) e a UF DEVE ser uma das 27
+  unidades federativas do Brasil.
 - **FR-008**: O sistema DEVE validar o CPF (formato e dígitos verificadores) e impedir dois
   clientes com o mesmo CPF.
 - **FR-009**: O sistema DEVE permitir editar os dados de um cliente, com as mesmas validações do
   cadastro.
-- **FR-010**: O sistema DEVE permitir excluir clientes, seguindo a regra definida para clientes
-  com contratos. [NEEDS CLARIFICATION: a exclusão de um cliente que tem contratos deve ser
-  bloqueada, deve apagar os contratos junto, ou clientes nunca podem ser excluídos?]
+- **FR-010**: O sistema DEVE permitir excluir clientes sem contratos, após confirmação. Se o
+  cliente tiver contratos, a exclusão DEVE ser bloqueada, com uma mensagem informando quantos
+  contratos estão vinculados a ele.
 - **FR-011**: O sistema DEVE listar clientes com paginação (20 itens por página) e ordenação
   alfabética por nome.
 - **FR-012**: O sistema DEVE filtrar clientes por nome (trecho do nome, sem diferenciar
@@ -237,8 +262,8 @@ novos dados aparecem (nome e foto no menu).
   (escolhido entre os cadastrados) e arquivo, todos obrigatórios.
 - **FR-016**: O sistema DEVE aceitar somente arquivos PDF válidos, recusando outros formatos e
   arquivos corrompidos.
-- **FR-017**: O sistema DEVE recusar arquivos PDF acima do tamanho máximo permitido.
-  [NEEDS CLARIFICATION: nenhum limite de tamanho foi informado para o PDF. Qual é o máximo?]
+- **FR-017**: O sistema DEVE aceitar arquivos PDF de até 100 MB e recusar arquivos maiores, com
+  uma mensagem informando o limite.
 - **FR-018**: O sistema DEVE impedir a existência de contratos sem cliente válido.
 - **FR-019**: O sistema DEVE permitir que um cliente tenha vários contratos.
 - **FR-020**: O sistema DEVE permitir editar título, data de assinatura e cliente de um
@@ -262,16 +287,18 @@ novos dados aparecem (nome e foto no menu).
   data de geração, e exibi-lo em um painel no detalhe do contrato sempre que a tela for aberta.
 - **FR-029**: Uma nova análise bem-sucedida DEVE substituir a anterior; uma análise que falhar
   NÃO DEVE apagar o resultado anterior.
-- **FR-030**: Se o serviço de IA falhar ou não responder em até 60 segundos, o sistema DEVE
-  encerrar a espera, mostrar uma mensagem amigável, sem detalhes técnicos, e permitir tentar de
-  novo.
+- **FR-030**: Se o serviço de IA falhar ou não responder em até 15 segundos, o sistema DEVE
+  encerrar a espera e mostrar um aviso não bloqueante (toast), sem detalhes técnicos, informando
+  que o serviço de análise está temporariamente indisponível; o usuário DEVE poder continuar
+  usando a tela e tentar de novo.
 - **FR-031**: Ao substituir o PDF de um contrato, o sistema DEVE descartar a análise anterior,
   pois ela se refere ao arquivo antigo.
 
 **Navegação e painel**
 
 - **FR-032**: O sistema DEVE oferecer um menu lateral com as áreas Home, Clientes e Contratos.
-- **FR-033**: A Home DEVE mostrar um gráfico com a quantidade de clientes por estado (UF).
+- **FR-033**: A Home DEVE mostrar um gráfico com a quantidade de clientes por estado, usando o
+  campo UF do endereço de cada cliente.
 - **FR-034**: A Home DEVE mostrar o total de contratos cadastrados e o total de clientes
   cadastrados, refletindo os dados atuais.
 
@@ -280,7 +307,8 @@ novos dados aparecem (nome e foto no menu).
 - **Usuário**: pessoa que acessa o sistema. Tem credenciais (usuário e senha) e dados de perfil:
   Nome, URL da foto de perfil e Telefone.
 - **Cliente**: pessoa física com quem a empresa faz contratos. Atributos: Nome Completo,
-  Telefone, Endereço, CPF (único) e RG. Pode ter zero ou mais contratos.
+  Telefone, Endereço (Logradouro, Número, CEP, Cidade, UF), CPF (único) e RG. Pode ter zero ou
+  mais contratos.
 - **Contrato**: acordo de compra e venda. Atributos: Título, Data de Assinatura e arquivo PDF.
   Pertence a exatamente um cliente.
 - **Análise de Contrato**: resultado da leitura do PDF pela IA. Atributos: resumo executivo dos
@@ -299,7 +327,8 @@ novos dados aparecem (nome e foto no menu).
 - **SC-004**: Com até 10.000 clientes e 10.000 contratos, as listagens e filtros mostram o
   resultado em até 2 segundos.
 - **SC-005**: Em 100% das tentativas, nenhuma tela interna ou dado de cliente fica acessível sem
-  login.
+  login, e nenhum usuário consegue mais de 5 tentativas de senha erradas seguidas dentro de 15
+  minutos.
 - **SC-006**: 100% dos contratos cadastrados têm um cliente válido vinculado.
 - **SC-007**: Os totais e o gráfico da Home batem com os dados cadastrados em 100% das
   conferências.
@@ -322,6 +351,5 @@ novos dados aparecem (nome e foto no menu).
   português.
 - Recuperação de senha, cadastro público de usuários, perfis de acesso diferentes, assinatura
   digital, versionamento de contratos e alertas de vencimento estão fora do escopo desta versão.
-- Os valores de paginação (20 por página), de expiração de sessão (8 horas) e de tempo-limite da
-  análise por IA (60 segundos) são padrões de mercado escolhidos na falta de indicação do
-  usuário; podem ser revistos na clarificação.
+- Os valores de paginação (20 por página) e de expiração de sessão (8 horas) são padrões de
+  mercado escolhidos na falta de indicação do usuário.

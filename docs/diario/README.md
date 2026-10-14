@@ -12,3 +12,4 @@ Registro cronológico de cada etapa do laboratório. Cada entrada segue o
 | 04 | [Instalando o Spec Kit e o Superpowers](./04-instalando-spec-kit-e-superpowers.md) | 2 — Especificação | concluída |
 | 05 | [Escrevendo a constituição](./05-constituicao.md) | 2 — Especificação | concluída |
 | 06 | [Escrevendo a especificação](./06-especificacao.md) | 2 — Especificação | concluída |
+| 07 | [Esclarecendo a especificação](./07-clarificacao.md) | 2 — Especificação | concluída |
