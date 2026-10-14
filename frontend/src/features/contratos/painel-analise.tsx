@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { FieldError } from '@/components/ui/field'
-import { formatarData, type Analise, type Gravidade } from './tipos'
+import { type Analise, type Gravidade } from './tipos'
 
 const ROTULO_GRAVIDADE: Record<Gravidade, string> = { ALTA: 'Alta', MEDIA: 'Média', BAIXA: 'Baixa' }
 const VARIANTE_GRAVIDADE: Record<Gravidade, 'destructive' | 'secondary' | 'outline'> = {
@@ -14,6 +14,8 @@ const VARIANTE_GRAVIDADE: Record<Gravidade, 'destructive' | 'secondary' | 'outli
   MEDIA: 'secondary',
   BAIXA: 'outline',
 }
+
+const MENSAGEM_IA_INDISPONIVEL = 'O serviço de análise está temporariamente indisponível. Tente novamente em instantes.'
 
 type Props = {
   contratoId: string
@@ -27,7 +29,6 @@ export function PainelAnalise({ contratoId, analiseInicial }: Props) {
 
   // Se já houver análise em andamento (outra aba), a API responde 409 e o toast avisa;
   // o botão não fica travado para sempre caso a trava expire (60 s no backend).
-  const ocupado = enviando
 
   async function solicitar() {
     if (enviando) return
@@ -41,7 +42,13 @@ export function PainelAnalise({ contratoId, analiseInicial }: Props) {
         setErroPdf(e.mensagem)
       } else {
         // 503, 409 e demais falhas: toast; a análise anterior continua na tela.
-        toast.error(e instanceof ErroApi ? e.mensagem : 'Não foi possível solicitar a análise.')
+        const mensagem =
+          e instanceof ErroApi
+            ? e.status === 503 || e.codigo === 'IA_INDISPONIVEL'
+              ? MENSAGEM_IA_INDISPONIVEL
+              : e.mensagem
+            : 'Não foi possível solicitar a análise.'
+        toast.error(mensagem)
       }
     } finally {
       setEnviando(false)
@@ -52,8 +59,8 @@ export function PainelAnalise({ contratoId, analiseInicial }: Props) {
     <Card>
       <CardHeader className="flex flex-row items-center justify-between gap-2">
         <CardTitle>Análise de riscos</CardTitle>
-        <Button onClick={solicitar} disabled={ocupado}>
-          {ocupado ? (
+        <Button onClick={solicitar} disabled={enviando}>
+          {enviando ? (
             <>
               <Loader2 className="animate-spin" aria-hidden="true" /> Analisando...
             </>
@@ -68,7 +75,7 @@ export function PainelAnalise({ contratoId, analiseInicial }: Props) {
           <p className="text-muted-foreground">Este contrato ainda não foi analisado.</p>
         ) : (
           <>
-            <p className="text-sm text-muted-foreground">Gerada em {formatarData(analise.geradaEm)}</p>
+            <p className="text-sm text-muted-foreground">Gerada em {new Date(analise.geradaEm).toLocaleDateString('pt-BR')}</p>
             <p>{analise.resumo}</p>
             <div>
               <h3 className="mb-2 font-medium">Riscos</h3>

@@ -17,7 +17,7 @@ const UUID_VALIDO = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{1
 
 const naoEncontrado = () => new ErroApp(404, 'NAO_ENCONTRADO', 'Contrato não encontrado.');
 const iaIndisponivel = () =>
-  new ErroApp(503, 'IA_INDISPONIVEL', 'A análise por IA está indisponível no momento. Tente novamente em instantes.');
+  new ErroApp(503, 'IA_INDISPONIVEL', 'O serviço de análise está temporariamente indisponível. Tente novamente em instantes.');
 
 /** Linha do banco -> formato da API (`Analise` em contracts/api.md). */
 export function paraAnaliseDto(a: AnaliseContrato): AnaliseDto {

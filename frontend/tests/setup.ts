@@ -2,6 +2,9 @@ import '@testing-library/jest-dom/vitest'
 import { cleanup } from '@testing-library/react'
 import { afterEach, vi } from 'vitest'
 
+// Fuso fixo: os testes de data local (ex.: geradaEm) não podem depender da máquina.
+process.env.TZ = 'America/Sao_Paulo'
+
 afterEach(() => {
   cleanup()
   vi.restoreAllMocks()

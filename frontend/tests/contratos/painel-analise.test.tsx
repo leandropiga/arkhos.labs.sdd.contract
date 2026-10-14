@@ -110,6 +110,14 @@ describe('painel de análise', () => {
     expect(screen.getByText(/14\/10\/2026/)).toBeInTheDocument()
   })
 
+  it('mostra a data de geração no fuso local, não em UTC (perto da meia-noite)', async () => {
+    // 2026-10-15T01:30Z = 14/10 22:30 em America/Sao_Paulo (TZ fixado em tests/setup.ts)
+    mockar({ ...detalheBase, analise: { ...analiseAnterior, geradaEm: '2026-10-15T01:30:00.000Z' } }, async () => resposta(200, analiseNova))
+    renderizar()
+
+    expect(await screen.findByText(/Gerada em 14\/10\/2026/)).toBeInTheDocument()
+  })
+
   it('mostra a análise já existente ao abrir o contrato', async () => {
     mockar({ ...detalheBase, analise: analiseAnterior }, async () => resposta(200, analiseNova))
     renderizar()
@@ -121,7 +129,8 @@ describe('painel de análise', () => {
 
   it('503 mostra o toast e mantém a análise anterior na tela', async () => {
     mockar({ ...detalheBase, analise: analiseAnterior }, async () =>
-      erro(503, 'IA_INDISPONIVEL', 'O serviço de análise está temporariamente indisponível. Tente novamente em instantes.'),
+      // Mensagem REAL do backend (servico-analise.ts); o toast deve mostrar o texto exigido pela spec.
+      erro(503, 'IA_INDISPONIVEL', 'A análise por IA está indisponível no momento. Tente novamente em instantes.'),
     )
     renderizar()
 
