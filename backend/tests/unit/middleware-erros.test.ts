@@ -67,9 +67,9 @@ describe('middleware de erros', () => {
 
   it('converte erro desconhecido em 500 ERRO_INTERNO genérico, sem vazar detalhes', () => {
     const erro = new Error(
-      'select * from "Cliente" where cpf = 1 falhou em C:\Developer\app\src\repo.ts',
+      String.raw`select * from "Cliente" where cpf = 1 falhou em C:\Developer\app\src\repo.ts`,
     );
-    erro.stack = 'Error: x\n    at consultar (C:\Developer\app\src\repo.ts:10:5)';
+    erro.stack = 'Error: x\n    at consultar (' + String.raw`C:\Developer\app\src\repo.ts` + ':10:5)';
 
     const { status, corpo } = executar(erro);
     expect(status).toBe(500);
@@ -78,7 +78,7 @@ describe('middleware de erros', () => {
     });
 
     const texto = JSON.stringify(corpo);
-    expect(texto).not.toMatch(/select|Cliente|stack|\.ts|C:\|\bat\b/i);
+    expect(texto).not.toMatch(/select|Cliente|stack|\.ts|C:\\|\bat\b/i);
   });
 
   it('trata valores lançados que não são Error como 500 ERRO_INTERNO', () => {
