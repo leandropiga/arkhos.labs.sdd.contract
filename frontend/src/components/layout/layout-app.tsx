@@ -1,8 +1,10 @@
-import { HomeIcon, FileTextIcon, UsersIcon } from 'lucide-react'
-import { Link, Outlet, useLocation } from 'react-router'
+import { HomeIcon, FileTextIcon, LogOutIcon, UsersIcon } from 'lucide-react'
+import { Link, Outlet, useLocation, useNavigate } from 'react-router'
+import { Button } from '@/components/ui/button'
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -14,6 +16,7 @@ import {
   SidebarTrigger,
 } from '@/components/ui/sidebar'
 import { TooltipProvider } from '@/components/ui/tooltip'
+import { api } from '@/lib/api'
 
 const itensMenu = [
   { titulo: 'Home', destino: '/', icone: HomeIcon },
@@ -27,6 +30,19 @@ function ativo(pathname: string, destino: string) {
 
 export function LayoutApp() {
   const { pathname } = useLocation()
+  const navegar = useNavigate()
+
+  // Mesmo que o logout falhe (rede, 500), voltamos ao /login: a próxima consulta
+  // da sessão decide se ainda há cookie válido.
+  async function sair() {
+    try {
+      await api('/api/auth/logout', { metodo: 'POST' })
+    } catch {
+      // ignorado de propósito
+    }
+    navegar('/login', { replace: true })
+  }
+
   return (
     <TooltipProvider>
       <SidebarProvider>
@@ -54,6 +70,12 @@ export function LayoutApp() {
               </SidebarGroupContent>
             </SidebarGroup>
           </SidebarContent>
+          <SidebarFooter>
+            <Button variant="ghost" className="w-full justify-start" onClick={sair}>
+              <LogOutIcon />
+              Sair
+            </Button>
+          </SidebarFooter>
         </Sidebar>
         <SidebarInset>
           <header className="flex h-12 items-center gap-2 border-b px-4">

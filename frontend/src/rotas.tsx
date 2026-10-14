@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router'
 import { TelaLogin } from '@/features/auth/tela-login'
+import { RotaProtegida } from '@/features/auth/rota-protegida'
 import { LayoutApp } from '@/components/layout/layout-app'
 
 // Placeholders: as telas reais chegam nas tarefas das histórias de usuário.
@@ -9,11 +10,13 @@ export function Rotas() {
   return (
     <Routes>
       <Route path="/login" element={<TelaLogin />} />
-      <Route element={<LayoutApp />}>
-        <Route path="/" element={<Pagina titulo="Home" />} />
-        <Route path="/clientes/*" element={<Pagina titulo="Clientes" />} />
-        <Route path="/contratos/*" element={<Pagina titulo="Contratos" />} />
-        <Route path="/perfil" element={<Pagina titulo="Perfil" />} />
+      <Route element={<RotaProtegida />}>
+        <Route element={<LayoutApp />}>
+          <Route path="/" element={<Pagina titulo="Home" />} />
+          <Route path="/clientes/*" element={<Pagina titulo="Clientes" />} />
+          <Route path="/contratos/*" element={<Pagina titulo="Contratos" />} />
+          <Route path="/perfil" element={<Pagina titulo="Perfil" />} />
+        </Route>
       </Route>
     </Routes>
   )
