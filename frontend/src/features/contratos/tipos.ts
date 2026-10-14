@@ -3,11 +3,20 @@ import type { ContratoResumo } from '@/features/clientes/tipos'
 
 export type { ContratoResumo, Pagina } from '@/features/clientes/tipos'
 
+export type Gravidade = 'BAIXA' | 'MEDIA' | 'ALTA'
+
+export type Analise = {
+  resumo: string
+  riscos: { titulo: string; descricao: string; gravidade: Gravidade }[]
+  clausulasCriticas: { clausula: string; motivo: string }[]
+  geradaEm: string
+}
+
 export type ContratoDetalhe = ContratoResumo & {
   arquivoNomeOriginal: string
   arquivoTamanhoBytes: number
   analiseEmAndamento: boolean
-  analise: unknown | null
+  analise: Analise | null
 }
 
 export function formatarData(iso: string): string {

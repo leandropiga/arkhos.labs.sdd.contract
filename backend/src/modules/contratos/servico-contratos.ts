@@ -4,6 +4,8 @@ import type { ArquivoRecebido } from '../../http/upload.js';
 import { ErroApp } from '../../http/erros.js';
 import { caminhoDoPdf, removerPdf, salvarDoTemporario } from '../../lib/armazenamento.js';
 import { prisma } from '../../lib/prisma.js';
+import { analiseEmAndamento } from '../analise/trava.js';
+import { paraAnaliseDto, type AnaliseDto } from '../analise/servico-analise.js';
 import { normalizarParaBusca } from '../../lib/texto-busca.js';
 import type { ContratoResumoDto, PaginaDto } from '../clientes/servico-clientes.js';
 import type { ConsultaContratos, DadosContrato } from './esquemas-contratos.js';
@@ -15,12 +17,16 @@ const incluirCliente = {
 } satisfies Prisma.ContratoInclude;
 type ContratoComCliente = Prisma.ContratoGetPayload<{ include: typeof incluirCliente }>;
 
+// O detalhe também traz a análise (no máximo uma por contrato).
+const incluirDetalhe = { ...incluirCliente, analise: true } satisfies Prisma.ContratoInclude;
+type ContratoDetalhado = Prisma.ContratoGetPayload<{ include: typeof incluirDetalhe }>;
+
 export interface ContratoDto extends ContratoResumoDto {
   arquivoNomeOriginal: string;
   arquivoTamanhoBytes: number;
   analiseEmAndamento: boolean;
-  /** A análise por IA chega na rodada 4; até lá o detalhe sempre traz null. */
-  analise: null;
+  /** Última análise por IA, ou null se nunca foi feita (ou se o PDF foi trocado depois). */
+  analise: AnaliseDto | null;
 }
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -48,13 +54,13 @@ function paraResumo(c: ContratoComCliente): ContratoResumoDto {
   };
 }
 
-function paraDto(c: ContratoComCliente): ContratoDto {
+function paraDto(c: ContratoDetalhado): ContratoDto {
   return {
     ...paraResumo(c),
     arquivoNomeOriginal: c.arquivoNomeOriginal,
     arquivoTamanhoBytes: c.arquivoTamanhoBytes,
-    analiseEmAndamento: c.analiseIniciadaEm !== null,
-    analise: null,
+    analiseEmAndamento: analiseEmAndamento(c.analiseIniciadaEm),
+    analise: c.analise ? paraAnaliseDto(c.analise) : null,
   };
 }
 
@@ -76,7 +82,7 @@ export async function criarContrato(dados: DadosContrato, arquivo: ArquivoRecebi
   await garantirCliente(dados.clienteId);
   const id = randomUUID();
 
-  let criado: ContratoComCliente;
+  let criado: ContratoDetalhado;
   try {
     criado = await prisma.contrato.create({
       data: {
@@ -85,7 +91,7 @@ export async function criarContrato(dados: DadosContrato, arquivo: ArquivoRecebi
         arquivoNomeOriginal: arquivo.nomeOriginal,
         arquivoTamanhoBytes: arquivo.tamanhoBytes,
       },
-      include: incluirCliente,
+      include: incluirDetalhe,
     });
   } catch (erro) {
     // O cliente foi excluído entre a checagem e a gravação: a FK barrou.
@@ -111,24 +117,28 @@ export async function editarContrato(
   if (!UUID.test(id)) throw naoEncontrado();
   await garantirCliente(dados.clienteId);
 
-  let atualizado: ContratoComCliente;
+  const atualizacao = prisma.contrato.update({
+    where: { id },
+    data: {
+      ...dadosParaBanco(dados),
+      ...(arquivo
+        ? {
+            arquivoNomeOriginal: arquivo.nomeOriginal,
+            arquivoTamanhoBytes: arquivo.tamanhoBytes,
+            analiseIniciadaEm: null,
+          }
+        : {}),
+    },
+    include: incluirDetalhe,
+  });
+
+  let atualizado: ContratoDetalhado;
   try {
-    atualizado = await prisma.contrato.update({
-      where: { id },
-      data: {
-        ...dadosParaBanco(dados),
-        ...(arquivo
-          ? {
-              arquivoNomeOriginal: arquivo.nomeOriginal,
-              arquivoTamanhoBytes: arquivo.tamanhoBytes,
-              // FR-031: PDF novo invalida a análise anterior. O modelo de análise chega na
-              // rodada 4; lá, apagar a AnaliseContrato deste contrato entra aqui.
-              analiseIniciadaEm: null,
-            }
-          : {}),
-      },
-      include: incluirCliente,
-    });
+    // FR-031: PDF novo invalida a análise anterior, então ela sai na mesma transação do update.
+    // (deleteMany em vez de delete: não falha se o contrato nunca teve análise.)
+    atualizado = arquivo
+      ? (await prisma.$transaction([prisma.analiseContrato.deleteMany({ where: { contratoId: id } }), atualizacao]))[1]
+      : await atualizacao;
   } catch (erro) {
     const codigo = codigoPrisma(erro);
     if (codigo === 'P2025') throw naoEncontrado();
@@ -143,7 +153,7 @@ export async function editarContrato(
 
 export async function buscarContrato(id: string): Promise<ContratoDto> {
   if (!UUID.test(id)) throw naoEncontrado();
-  const contrato = await prisma.contrato.findUnique({ where: { id }, include: incluirCliente });
+  const contrato = await prisma.contrato.findUnique({ where: { id }, include: incluirDetalhe });
   if (!contrato) throw naoEncontrado();
   return paraDto(contrato);
 }

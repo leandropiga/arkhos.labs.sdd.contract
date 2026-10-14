@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router'
 import { api, ErroApi } from '@/lib/api'
 import {
@@ -28,6 +28,8 @@ export function DetalheCliente() {
   const [cliente, setCliente] = useState<ClienteDetalhe | null>(null)
   const [erro, setErro] = useState<string | null>(null)
   const [erroExclusao, setErroExclusao] = useState<string | null>(null)
+  const [excluindo, setExcluindo] = useState(false)
+  const excluindoRef = useRef(false) // trava síncrona contra cliques repetidos
 
   useEffect(() => {
     let ativo = true
@@ -47,12 +49,18 @@ export function DetalheCliente() {
   }, [id])
 
   async function excluir() {
+    if (excluindoRef.current) return
+    excluindoRef.current = true
+    setExcluindo(true)
     setErroExclusao(null)
     try {
       await api(`/api/clientes/${id}`, { metodo: 'DELETE' })
       navegar('/clientes')
     } catch (e) {
       setErroExclusao(e instanceof ErroApi ? e.mensagem : 'Não foi possível excluir o cliente.')
+    } finally {
+      excluindoRef.current = false
+      setExcluindo(false)
     }
   }
 
@@ -76,7 +84,9 @@ export function DetalheCliente() {
           </Button>
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="destructive">Excluir cliente</Button>
+              <Button variant="destructive" disabled={excluindo}>
+                Excluir cliente
+              </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>

@@ -86,8 +86,22 @@ model Contrato {
   analiseIniciadaEm   DateTime?
   criadoEm            DateTime  @default(now())
   atualizadoEm        DateTime  @updatedAt
+  analise             AnaliseContrato?
 
   @@index([tituloBusca])
   @@index([dataAssinatura])
   @@index([clienteId])
+}
+
+// Análise de riscos feita pela IA. No máximo uma por contrato (a nova substitui a anterior).
+model AnaliseContrato {
+  id                String   @id @default(uuid()) @db.Uuid
+  contratoId        String   @unique @db.Uuid
+  contrato          Contrato @relation(fields: [contratoId], references: [id], onDelete: Cascade)
+  resumo            String
+  // [{ titulo, descricao, gravidade: "BAIXA" | "MEDIA" | "ALTA" }]
+  riscos            Json
+  // [{ clausula, motivo }]
+  clausulasCriticas Json
+  geradaEm          DateTime @default(now())
 }

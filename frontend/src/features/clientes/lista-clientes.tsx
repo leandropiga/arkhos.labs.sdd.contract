@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router'
+import { useAtrasado } from '@/lib/use-atrasado'
 import { api, ErroApi } from '@/lib/api'
 import { Button } from '@/components/ui/button'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
@@ -15,15 +16,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { formatarCpf, type Cliente, type Pagina } from './tipos'
 
 const ATRASO_FILTRO_MS = 300
-
-function useAtrasado(valor: string, atrasoMs: number) {
-  const [atrasado, setAtrasado] = useState(valor)
-  useEffect(() => {
-    const id = setTimeout(() => setAtrasado(valor), atrasoMs)
-    return () => clearTimeout(id)
-  }, [valor, atrasoMs])
-  return atrasado
-}
 
 export function ListaClientes() {
   const [nome, setNome] = useState('')
@@ -107,7 +99,7 @@ export function ListaClientes() {
 
       {erro && <FieldError>{erro}</FieldError>}
 
-      {!dados && !erro && <p>Carregando...</p>}
+      {carregando && <p role="status">Carregando...</p>}
 
       {dados && dados.itens.length === 0 && <p>Nenhum cliente encontrado.</p>}
 
