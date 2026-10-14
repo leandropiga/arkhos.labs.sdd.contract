@@ -75,7 +75,7 @@ describe('cliente HTTP (api)', () => {
       }),
     )
 
-    const erro = await api('/api/clientes', { metodo: 'POST', corpo: {} }).catch((e) => e)
+    const erro = (await api('/api/clientes', { metodo: 'POST', corpo: {} }).catch((e) => e)) as ErroApi
 
     expect(erro).toBeInstanceOf(ErroApi)
     expect(erro).toBeInstanceOf(Error)
@@ -91,7 +91,7 @@ describe('cliente HTTP (api)', () => {
       resposta(404, { erro: { codigo: 'NAO_ENCONTRADO', mensagem: 'Recurso não encontrado' } }),
     )
 
-    const erro = await api('/api/contratos/x').catch((e) => e)
+    const erro = (await api('/api/contratos/x').catch((e) => e)) as ErroApi
 
     expect(erro).toBeInstanceOf(ErroApi)
     expect(erro.status).toBe(404)
@@ -103,7 +103,7 @@ describe('cliente HTTP (api)', () => {
       resposta(401, { erro: { codigo: 'NAO_AUTENTICADO', mensagem: 'Sessão inválida' } }),
     )
 
-    const erro = await api('/api/contratos').catch((e) => e)
+    const erro = (await api('/api/contratos').catch((e) => e)) as ErroApi
 
     expect(erro).toBeInstanceOf(ErroApi)
     expect(erro.status).toBe(401)
@@ -115,9 +115,9 @@ describe('cliente HTTP (api)', () => {
       resposta(401, { erro: { codigo: 'CREDENCIAIS_INVALIDAS', mensagem: 'E-mail ou senha inválidos' } }),
     )
 
-    const erro = await api('/api/auth/login', { metodo: 'POST', corpo: { email: 'a', senha: 'b' } }).catch(
+    const erro = (await api('/api/auth/login', { metodo: 'POST', corpo: { email: 'a', senha: 'b' } }).catch(
       (e) => e,
-    )
+    )) as ErroApi
 
     expect(erro).toBeInstanceOf(ErroApi)
     expect(erro.status).toBe(401)

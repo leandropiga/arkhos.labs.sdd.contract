@@ -18,8 +18,15 @@ import { MemoryRouter, Route, Routes } from 'react-router'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { LayoutApp } from '@/components/layout/layout-app'
 import { RotaProtegida } from '@/features/auth/rota-protegida'
+import type { Perfil } from '@/features/auth/tipos'
 
-const perfil = { id: 1, usuario: 'admin', nome: 'Administrador', fotoUrl: null, telefone: null }
+const perfil: Perfil = {
+  id: '0b6f8f9e-3c1a-4d2e-9f00-7a1b2c3d4e5f',
+  usuario: 'admin',
+  nome: 'Administrador',
+  fotoUrl: null,
+  telefone: null,
+}
 
 function resposta(status: number, corpo?: unknown): Response {
   return new Response(corpo === undefined ? null : JSON.stringify(corpo), {

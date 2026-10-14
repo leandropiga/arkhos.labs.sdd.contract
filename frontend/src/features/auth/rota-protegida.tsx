@@ -1,14 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { Navigate, Outlet } from 'react-router'
 import { api } from '@/lib/api'
-
-export type Perfil = {
-  id: number
-  usuario: string
-  nome: string
-  fotoUrl: string | null
-  telefone: string | null
-}
+import type { Perfil } from '@/features/auth/tipos'
 
 type Estado = { situacao: 'carregando' } | { situacao: 'sem-sessao' } | { situacao: 'ok'; usuario: Perfil }
 

@@ -8,7 +8,7 @@ describe('cliente HTTP (api): respostas fora do padrão', () => {
     vi.stubGlobal('fetch', fetchMock)
     fetchMock.mockResolvedValue(new Response('<html>Bad Gateway</html>', { status: 502 }))
 
-    const erro = await api('/api/contratos').catch((e) => e)
+    const erro = (await api('/api/contratos').catch((e) => e)) as ErroApi
 
     expect(erro).toBeInstanceOf(ErroApi)
     expect(erro.status).toBe(502)
@@ -20,7 +20,7 @@ describe('cliente HTTP (api): respostas fora do padrão', () => {
     vi.stubGlobal('fetch', fetchMock)
     fetchMock.mockRejectedValue(new TypeError('Failed to fetch'))
 
-    const erro = await api('/api/contratos').catch((e) => e)
+    const erro = (await api('/api/contratos').catch((e) => e)) as ErroApi
 
     expect(erro).toBeInstanceOf(ErroApi)
     expect(erro.status).toBe(0)

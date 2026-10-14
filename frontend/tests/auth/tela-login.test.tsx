@@ -15,6 +15,15 @@ import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { TelaLogin } from '@/features/auth/tela-login'
+import type { Perfil } from '@/features/auth/tipos'
+
+const perfil: Perfil = {
+  id: '0b6f8f9e-3c1a-4d2e-9f00-7a1b2c3d4e5f',
+  usuario: 'admin',
+  nome: 'Administrador',
+  fotoUrl: null,
+  telefone: null,
+}
 
 function resposta(status: number, corpo?: unknown): Response {
   return new Response(corpo === undefined ? null : JSON.stringify(corpo), {
@@ -49,7 +58,7 @@ describe('TelaLogin (História 1)', () => {
   })
 
   it('envia usuário e senha e, em sucesso, navega para a página inicial', async () => {
-    fetchMock.mockResolvedValue(resposta(200, { usuario: { id: 1, usuario: 'admin' } }))
+    fetchMock.mockResolvedValue(resposta(200, { usuario: perfil }))
     renderizar()
 
     await preencherEEnviar('admin', 'segredo123')
