@@ -123,7 +123,7 @@ nenhum contrato.
 
 ### Testes da História 2 (escrever primeiro e ver falhar)
 
-- [ ] T036 [P] [US2] Teste unitário de CPF em `backend/tests/unit/cpf.test.ts`: aceita com e sem pontuação; normaliza para 11 dígitos; recusa dígitos verificadores inválidos e sequências repetidas (`111.111.111-11`)
+- [X] T036 [P] [US2] Teste unitário de CPF em `backend/tests/unit/cpf.test.ts`: aceita com e sem pontuação; normaliza para 11 dígitos; recusa dígitos verificadores inválidos e sequências repetidas (`111.111.111-11`)
 - [ ] T037 [P] [US2] Teste HTTP de cadastro e edição em `backend/tests/http/clientes-cadastro.test.ts`: `POST /api/clientes` válido → `201`; cada campo obrigatório vazio → `400 VALIDACAO_INVALIDA` com o campo em `campos`; CPF inválido, CEP sem 8 dígitos e UF fora das 27 → `400`; CPF repetido → `409 CPF_DUPLICADO`; `PUT` aplica as mesmas regras; `GET /api/clientes/:id` de um cliente com 2 contratos devolve `contratos` com 2 itens (`ContratoResumo`), do mais recente para o mais antigo (FR-014); `GET /api/clientes/:id` inexistente → `404`; sem sessão → `401`
 - [ ] T038 [P] [US2] Teste HTTP de listagem em `backend/tests/http/clientes-listagem.test.ts`: 25 clientes → página 1 com 20 itens em ordem alfabética e `totalPaginas: 2`; `pagina=99` devolve a última página; filtro `nome=jose` encontra "José"; filtro `cpf` com pontuação encontra o cliente; filtro sem resultado devolve `itens: []`
 - [ ] T039 [P] [US2] Teste HTTP de exclusão em `backend/tests/http/clientes-exclusao.test.ts`: cliente sem contratos → `204`; cliente com 2 contratos (inseridos direto pelo Prisma) → `409 CLIENTE_COM_CONTRATOS` com mensagem citando "2 contratos"
