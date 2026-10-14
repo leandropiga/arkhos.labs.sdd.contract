@@ -77,6 +77,12 @@ clientes: lista/form/detalhe, contratos: lista/form/detalhe, perfil).
 
 Resultado: **portão aprovado**, sem violações a justificar.
 
+> **Atualização (rodada 1 da implementação):** o CLI do shadcn/ui 4.21.4 não tem mais o
+> componente `Form` (usamos `Field` + `react-hook-form` + `zod`) e instalou `cn`, `shadcn`,
+> `@fontsource-variable/geist` e `next-themes` no lugar de `clsx`/`tailwind-merge` na base.
+> Justificativas em [ADR 0011](../../docs/decisoes/0011-formularios-com-field-e-dependencias-do-shadcn.md).
+> O texto acima foi mantido como foi planejado.
+
 ## Riscos
 
 | # | Risco | Impacto | Tratamento |
