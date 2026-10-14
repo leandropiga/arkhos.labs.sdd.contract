@@ -9,6 +9,7 @@ implementação, testes e deploy — documentado para servir de tutorial.
 - [`docs/diario/`](docs/diario/README.md) — o passo a passo, em ordem.
 - [`docs/decisoes/`](docs/decisoes/) — por que cada escolha foi feita (ADRs).
 - [`docs/prompts/`](docs/prompts/) — os prompts usados com o agente de IA.
+- [`docs/ideacao/`](docs/ideacao/visao-do-produto.md) — a visão do produto (o que e por quê).
 
 Cada fase concluída tem uma tag Git (`fase-N-<nome>`), para que você possa fazer
 `git checkout` em qualquer ponto do processo.
