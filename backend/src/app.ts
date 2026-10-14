@@ -7,6 +7,8 @@ import { rotasAuth } from './modules/auth/rotas-auth.js';
 /** Fábrica do app Express: devolve um app novo a cada chamada, sem chamar listen. */
 export function criarApp(): Express {
   const app = express();
+  // Não anunciar a stack ("X-Powered-By: Express") nas respostas (Princípio III).
+  app.disable('x-powered-by');
   app.use(express.json());
 
   const api = express.Router();

@@ -60,3 +60,11 @@ describe('rota inexistente sob /api', () => {
     });
   });
 });
+
+describe('cabeçalhos da resposta', () => {
+  it('não revelam a stack (sem X-Powered-By)', async () => {
+    const res = await request(criarApp()).get('/api/auth/sessao');
+
+    expect(res.headers['x-powered-by']).toBeUndefined();
+  });
+});
