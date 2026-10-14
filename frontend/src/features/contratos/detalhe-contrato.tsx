@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { FieldError } from '@/components/ui/field'
+import { PainelAnalise } from './painel-analise'
 import { formatarData, type ContratoDetalhe } from './tipos'
 
 function formatarTamanho(bytes: number): string {
@@ -111,6 +112,8 @@ export function DetalheContrato() {
           </a>
         </Button>
       </div>
+
+      <PainelAnalise contratoId={contrato.id} analiseInicial={contrato.analise} />
     </section>
   )
 }
