@@ -41,7 +41,7 @@ implementada, testada e demonstrada sozinha.
 
 **Propósito**: criar o monorepo, o banco e os dois pacotes com suas ferramentas de teste.
 
-- [ ] T001 Criar `docker-compose.yml` na raiz com o serviço `postgres:18` (sem o campo `version`), porta 5432, volume nomeado e montagem de `docker/init-db.sql`; criar `docker/init-db.sql` que cria os bancos `contratos` e `contratos_test`
+- [X] T001 Criar `docker-compose.yml` na raiz com o serviço `postgres:18` (sem o campo `version`), porta 5432, volume nomeado e montagem de `docker/init-db.sql`; criar `docker/init-db.sql` que cria os bancos `contratos` e `contratos_test`
 - [ ] T002 Atualizar `.gitignore` da raiz com `backend/.env`, `backend/.env.test`, `frontend/.env`, `backend/tmp/`, `backend/storage/`, `node_modules/`, `dist/`
 - [ ] T003 Criar `backend/package.json` (ESM, `"type": "module"`) com as dependências e versões de R-01 (express 5.3.0, @prisma/client 7.10.0, prisma 7.10.0, @prisma/adapter-pg 7.10.0, pg 8.23.1, multer 2.4.0, @google/genai ^2.29.1, jose 6.2.12, zod 4.6.7; dev: typescript 7.0.2, tsx 4.23.15, vitest 5.0.4, supertest 7.3.1, @types/express 5.0.6, @types/multer 2.3.0, @types/supertest 7.2.1, @types/pg 8.23.1, @types/node 24.19.2) e scripts `dev` (`tsx watch --env-file=.env src/server.ts`), `test` (`vitest run`), `seed` (`tsx --env-file=.env prisma/seed.ts`)
 - [ ] T004 [P] Criar `backend/tsconfig.json` (strict, `module`/`moduleResolution` NodeNext, target ES2024) e `backend/vitest.config.ts` com `fileParallelism: false`, `globalSetup: tests/setup/global-setup.ts` e `setupFiles: tests/setup/limpar-banco.ts`
