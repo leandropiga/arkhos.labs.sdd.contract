@@ -13,6 +13,13 @@ const credenciaisInvalidas = () =>
 let hashFicticio: Promise<string> | undefined;
 const obterHashFicticio = () => (hashFicticio ??= gerarHash('senha-ficticia-sem-uso'));
 
+/** Grava o bloqueio se o contador chegou ao limite e ainda não há bloqueio (idempotente). */
+const aplicarBloqueioSeNoLimite = (id: string) =>
+  prisma.usuario.updateMany({
+    where: { id, tentativasFalhas: { gte: MAX_FALHAS }, bloqueadoAte: null },
+    data: { bloqueadoAte: new Date(Date.now() + DURACAO_BLOQUEIO_MS) },
+  });
+
 /**
  * Login por usuário e senha, com bloqueio de 15 min após 5 falhas seguidas.
  * Lança ErroApp 401 CREDENCIAIS_INVALIDAS ou 429 LOGIN_BLOQUEADO; devolve o Perfil (sem senha).
@@ -27,34 +34,38 @@ export async function entrar(usuario: string, senha: string): Promise<Perfil> {
   }
 
   const agora = new Date();
-  if (registro.bloqueadoAte) {
-    if (registro.bloqueadoAte > agora) {
-      throw new ErroApp(
-        429,
-        'LOGIN_BLOQUEADO',
-        'Muitas tentativas sem sucesso. Tente novamente em 15 minutos.',
-      );
-    }
-    // Bloqueio vencido: recomeça a contagem (senão a próxima falha contaria como a 6ª).
-    await prisma.usuario.update({
-      where: { id: registro.id },
-      data: { tentativasFalhas: 0, bloqueadoAte: null },
-    });
+  // 1) Bloqueio vencido: recomeça a contagem (senão a próxima falha contaria como a 6ª).
+  //    Condicional no banco: só zera se o bloqueio já passou.
+  await prisma.usuario.updateMany({
+    where: { id: registro.id, bloqueadoAte: { lte: agora } },
+    data: { tentativasFalhas: 0, bloqueadoAte: null },
+  });
+
+  // 2) Reserva ATÔMICA da tentativa ANTES de verificar a senha. O UPDATE condicional é
+  //    serializado pelo Postgres (trava de linha): com N requisições simultâneas, no máximo
+  //    MAX_FALHAS conseguem reservar; as demais recebem 429 sem chegar ao scrypt (SC-005).
+  //    Bloqueado (bloqueadoAte no futuro) ou contador no limite também caem aqui, sem
+  //    alterar os contadores.
+  const reserva = await prisma.usuario.updateMany({
+    where: { id: registro.id, tentativasFalhas: { lt: MAX_FALHAS }, bloqueadoAte: null },
+    data: { tentativasFalhas: { increment: 1 } },
+  });
+  if (reserva.count === 0) {
+    // Garante o bloqueio mesmo se quem reservou a 5ª tentativa não chegou a gravá-lo
+    // (ex.: falhou no meio); sem isso a conta ficaria presa no limite sem prazo de saída.
+    await aplicarBloqueioSeNoLimite(registro.id);
+    throw new ErroApp(
+      429,
+      'LOGIN_BLOQUEADO',
+      'Muitas tentativas sem sucesso. Tente novamente em 15 minutos.',
+    );
   }
 
+  // 3) Verifica a senha.
   if (!(await verificarSenha(senha, registro.senhaHash))) {
-    // Incremento atômico no banco; quem cruzar o limite aplica o bloqueio.
-    const atualizado = await prisma.usuario.update({
-      where: { id: registro.id },
-      data: { tentativasFalhas: { increment: 1 } },
-      select: { tentativasFalhas: true },
-    });
-    if (atualizado.tentativasFalhas >= MAX_FALHAS) {
-      await prisma.usuario.update({
-        where: { id: registro.id },
-        data: { bloqueadoAte: new Date(Date.now() + DURACAO_BLOQUEIO_MS) },
-      });
-    }
+    // A tentativa já foi contada na reserva. Se o contador chegou ao limite, grava o
+    // bloqueio — de forma idempotente (só quem encontrar bloqueadoAte nulo grava).
+    await aplicarBloqueioSeNoLimite(registro.id);
     throw credenciaisInvalidas();
   }
 

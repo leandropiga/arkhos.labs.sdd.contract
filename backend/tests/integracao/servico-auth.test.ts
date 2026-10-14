@@ -106,6 +106,22 @@ describe('entrar (serviço de login)', () => {
     expect(await estado()).toEqual({ tentativasFalhas: 0, bloqueadoAte: null });
   });
 
+  it('tentativas erradas simultâneas: no máximo 5 viram 401, o resto 429, e o bloqueio é gravado', async () => {
+    const erros = await Promise.all(
+      Array.from({ length: 20 }, () => erroDe(entrar(USUARIO, ERRADA))),
+    );
+
+    const status = erros.map((erro) => erro.status);
+    const quantos401 = status.filter((s) => s === 401).length;
+    const quantos429 = status.filter((s) => s === 429).length;
+    expect(quantos401).toBeLessThanOrEqual(5);
+    expect(quantos401 + quantos429).toBe(20);
+
+    const noBanco = await estado();
+    expect(noBanco.tentativasFalhas).toBe(5);
+    expect(noBanco.bloqueadoAte).not.toBeNull();
+  });
+
   it('bloqueio expirado + senha errada conta 1 falha (não 6), sem 429', async () => {
     await prisma.usuario.update({
       where: { usuario: USUARIO },
