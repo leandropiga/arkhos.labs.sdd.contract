@@ -1,7 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import request from 'supertest';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-// Este import vem antes do app: ele aponta UPLOAD_TMP_DIR e STORAGE_DIR para pastas de teste.
 import {
   caminhoNoStorage, dirStorage, dirTmp, gravarNoStorage, listar, pdfFalso, pdfValido,
   prepararPastas, removerPastas,

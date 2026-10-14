@@ -1,11 +1,8 @@
 import { mkdir, readdir, rm, rmdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
-// Os testes de contratos usam pastas próprias (dentro de backend/tmp, ignorada pelo Git) para
-// nunca encostar nos PDFs de desenvolvimento. As variáveis precisam ser trocadas ANTES de a
-// aplicação ler o env; por isso os testes importam este módulo antes de '../../src/app.js'.
-process.env.UPLOAD_TMP_DIR = 'tmp/teste/uploads';
-process.env.STORAGE_DIR = 'tmp/teste/storage';
+// Os testes de contratos usam pastas próprias (tmp/teste/*, ver test.env em vitest.config.ts)
+// para nunca encostar nos PDFs de desenvolvimento.
 
 export const LIMITE_PDF_BYTES = 52_428_800;
 
