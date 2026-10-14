@@ -52,6 +52,10 @@ Ao gerar prompts a partir do `TUTORIAL_DRAFT.md`, aplicar os ADRs:
   `/speckit-plan` encontrou o conflito com os 100 MB da clarificação.
 - 0006: Vitest no backend e no frontend (não Jest).
 - 0008: Superpowers v7 via `superpowers@superpowers-marketplace` (não o marketplace oficial).
+- 0010: implementação com `subagent-driven-development` do Superpowers sobre o `tasks.md` (sem
+  regenerar o plano), em rodadas com escopo explícito, num worktree em `.worktrees/`. Commits por
+  tarefa na branch; o merge na `main` é o commit de etapa. Copiar os *Rulings* do ledger
+  (`.superpowers/sdd/`, fora do Git) para o diário ao fim de cada rodada.
 
 ## Git e GitHub
 

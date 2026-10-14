@@ -6,3 +6,8 @@ dist/
 *.log
 .claude/settings.local.json
 .specify/extensions/.cache/
+!.env.*.example
+
+# Superpowers: worktrees e ledger de execução (ADR 0010)
+.worktrees/
+.superpowers/

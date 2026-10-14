@@ -14,3 +14,4 @@ Cada arquivo registra uma escolha: o contexto, as opções e o porquê. Modelo e
 | 0007 | [Tutorial somente com Claude Code](./0007-tutorial-somente-claude-code.md) | aceita |
 | 0008 | [Instalar o Superpowers pelo marketplace do autor (v7)](./0008-superpowers-pelo-marketplace-do-autor.md) | aceita |
 | 0009 | [Corrigir o limite do PDF no plano, em vez de encenar o bug](./0009-plano-pega-o-limite-do-gemini.md) | aceita |
+| 0010 | [Implementar com o Superpowers sobre o `tasks.md`, por incrementos](./0010-implementacao-superpowers-sobre-tasks.md) | aceita |
