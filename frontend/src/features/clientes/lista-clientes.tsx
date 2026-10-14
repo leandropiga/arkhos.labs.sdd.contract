@@ -31,11 +31,13 @@ export function ListaClientes() {
   const [numeroPagina, setNumeroPagina] = useState(1)
   const [dados, setDados] = useState<Pagina<Cliente> | null>(null)
   const [erro, setErro] = useState<string | null>(null)
+  const [carregando, setCarregando] = useState(true)
   const nomeBusca = useAtrasado(nome.trim(), ATRASO_FILTRO_MS)
   const cpfBusca = useAtrasado(cpf.trim(), ATRASO_FILTRO_MS)
 
   useEffect(() => {
     let ativo = true
+    setCarregando(true)
     const params = new URLSearchParams()
     if (nomeBusca) params.set('nome', nomeBusca)
     if (cpfBusca) params.set('cpf', cpfBusca)
@@ -47,7 +49,12 @@ export function ListaClientes() {
         setErro(null)
       })
       .catch((e) => {
-        if (ativo) setErro(e instanceof ErroApi ? e.mensagem : 'Não foi possível carregar os clientes.')
+        if (!ativo) return
+        setDados(null)
+        setErro(e instanceof ErroApi ? e.mensagem : 'Não foi possível carregar os clientes.')
+      })
+      .finally(() => {
+        if (ativo) setCarregando(false)
       })
     return () => {
       ativo = false
@@ -64,7 +71,7 @@ export function ListaClientes() {
   }
 
   return (
-    <section className="flex flex-col gap-4">
+    <section className="flex flex-col gap-4" aria-busy={carregando}>
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Clientes</h1>
         <Button asChild>
@@ -99,6 +106,8 @@ export function ListaClientes() {
       </div>
 
       {erro && <FieldError>{erro}</FieldError>}
+
+      {!dados && !erro && <p>Carregando...</p>}
 
       {dados && dados.itens.length === 0 && <p>Nenhum cliente encontrado.</p>}
 

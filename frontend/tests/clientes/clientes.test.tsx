@@ -96,6 +96,30 @@ describe('telas de clientes', () => {
 
       expect(await screen.findByText('Nenhum cliente encontrado.')).toBeInTheDocument()
     })
+
+    it('mostra "Carregando..." na primeira carga', async () => {
+      fetchMock.mockImplementation(async () => resposta(200, pagina([ana])))
+      renderizar('/clientes')
+
+      expect(screen.getByText('Carregando...')).toBeInTheDocument()
+      expect(await screen.findByText('Ana Souza')).toBeInTheDocument()
+      expect(screen.queryByText('Carregando...')).not.toBeInTheDocument()
+    })
+
+    it('se a busca falha, mostra o erro e não mantém as linhas antigas', async () => {
+      fetchMock.mockImplementation(async (url: string) =>
+        url.includes('nome=Bruno')
+          ? resposta(500, { erro: { codigo: 'ERRO_INTERNO', mensagem: 'Falha ao buscar.' } })
+          : resposta(200, pagina([ana])),
+      )
+      renderizar('/clientes')
+      await screen.findByText('Ana Souza')
+
+      await userEvent.setup().type(screen.getByLabelText('Nome'), 'Bruno')
+
+      expect(await screen.findByText('Falha ao buscar.')).toBeInTheDocument()
+      expect(screen.queryByText('Ana Souza')).not.toBeInTheDocument()
+    })
   })
 
   describe('formulário', () => {
