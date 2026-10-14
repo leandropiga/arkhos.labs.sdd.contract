@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, type Request } from 'express';
 import { ErroApp } from '../../http/erros.js';
 import { receberPdf } from '../../http/upload.js';
 import { validar } from '../../http/validar.js';
@@ -27,6 +27,14 @@ function disposicaoInline(nome: string): string {
   return `inline; filename="${ascii}"; filename*=UTF-8''${encodeURIComponent(limpo)}`;
 }
 
+/** Campos de texto do multipart. Sem multipart, o Express 5 deixa `req.body` indefinido: vira 400 claro. */
+function camposDoFormulario(req: Request): unknown {
+  if (typeof req.body !== 'object' || req.body === null) {
+    throw new ErroApp(400, 'VALIDACAO_INVALIDA', 'O corpo da requisição não é um formulário válido.');
+  }
+  return req.body;
+}
+
 rotasContratos.get('/', validar({ consulta: esquemaListagemContratos }), async (_req, res, next) => {
   try {
     res.json(await listarContratos(res.locals.consulta as ConsultaContratos));
@@ -38,7 +46,7 @@ rotasContratos.get('/', validar({ consulta: esquemaListagemContratos }), async (
 rotasContratos.post(
   '/',
   receberPdf({ obrigatorio: true }, async (req, arquivo) => {
-    const dados = esquemaContrato.parse(req.body);
+    const dados = esquemaContrato.parse(camposDoFormulario(req));
     return { status: 201, corpo: await criarContrato(dados, arquivo!) };
   }),
 );
@@ -54,7 +62,7 @@ rotasContratos.get('/:id', async (req, res, next) => {
 rotasContratos.put(
   '/:id',
   receberPdf({ obrigatorio: false }, async (req, arquivo) => {
-    const dados = esquemaContrato.parse(req.body);
+    const dados = esquemaContrato.parse(camposDoFormulario(req));
     return { status: 200, corpo: await editarContrato(String(req.params.id), dados, arquivo) };
   }),
 );

@@ -4,6 +4,7 @@ import type { ArquivoRecebido } from '../../http/upload.js';
 import { ErroApp } from '../../http/erros.js';
 import { caminhoDoPdf, removerPdf, salvarDoTemporario } from '../../lib/armazenamento.js';
 import { prisma } from '../../lib/prisma.js';
+import { analiseEmAndamento } from '../analise/trava.js';
 import { paraAnaliseDto, type AnaliseDto } from '../analise/servico-analise.js';
 import { normalizarParaBusca } from '../../lib/texto-busca.js';
 import type { ContratoResumoDto, PaginaDto } from '../clientes/servico-clientes.js';
@@ -58,7 +59,7 @@ function paraDto(c: ContratoDetalhado): ContratoDto {
     ...paraResumo(c),
     arquivoNomeOriginal: c.arquivoNomeOriginal,
     arquivoTamanhoBytes: c.arquivoTamanhoBytes,
-    analiseEmAndamento: c.analiseIniciadaEm !== null,
+    analiseEmAndamento: analiseEmAndamento(c.analiseIniciadaEm),
     analise: c.analise ? paraAnaliseDto(c.analise) : null,
   };
 }

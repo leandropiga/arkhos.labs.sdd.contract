@@ -275,3 +275,29 @@ describe('GET /api/contratos/:id/arquivo', () => {
     expect(res.body.erro.codigo).toBe('NAO_AUTENTICADO');
   });
 });
+
+describe('dívida da rodada 3', () => {
+  it('PUT sem corpo (sem multipart) responde 400 VALIDACAO_INVALIDA em português', async () => {
+    const contrato = await criarContratoComPdf();
+
+    const res = await request(app).put(`/api/contratos/${contrato.id}`).set('Cookie', cookie);
+
+    expect(res.status).toBe(400);
+    expect(res.body.erro.codigo).toBe('VALIDACAO_INVALIDA');
+    expect(res.body.erro.mensagem).toMatch(/formulário/i);
+    expect(JSON.stringify(res.body)).not.toMatch(/undefined|expected|Zod/i);
+  });
+
+  it('analiseEmAndamento expira: trava com mais de 60 s não conta como em andamento', async () => {
+    const contrato = await criarContratoComPdf();
+
+    await prisma.contrato.update({ where: { id: contrato.id }, data: { analiseIniciadaEm: new Date() } });
+    expect((await request(app).get(`/api/contratos/${contrato.id}`).set('Cookie', cookie)).body.analiseEmAndamento).toBe(true);
+
+    await prisma.contrato.update({
+      where: { id: contrato.id },
+      data: { analiseIniciadaEm: new Date(Date.now() - 61_000) },
+    });
+    expect((await request(app).get(`/api/contratos/${contrato.id}`).set('Cookie', cookie)).body.analiseEmAndamento).toBe(false);
+  });
+});
