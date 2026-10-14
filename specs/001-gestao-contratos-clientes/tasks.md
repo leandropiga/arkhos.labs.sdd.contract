@@ -50,7 +50,7 @@ implementada, testada e demonstrada sozinha.
 - [X] T007 Configurar Tailwind CSS v4 em `frontend/vite.config.ts` (plugin `@tailwindcss/vite` 4.3.3) e `frontend/src/index.css` (`@import "tailwindcss";`); adicionar em `frontend/vite.config.ts` o proxy de `/api` para `http://localhost:3000`
 - [X] T008 Rodar `npx shadcn@latest init` em `frontend/` (configuração Vite + Tailwind v4), gerando `frontend/components.json`, o tema em `frontend/src/index.css` e `frontend/src/lib/utils.ts`
 - [X] T009 Adicionar componentes do shadcn/ui com `npx shadcn@latest add button input label form card table pagination dialog alert-dialog sonner chart sidebar avatar dropdown-menu badge skeleton` em `frontend/src/components/ui/`
-- [ ] T010 [P] Configurar testes do frontend: `frontend/vitest.config.ts` (ambiente `jsdom`, `setupFiles: tests/setup.ts`), `frontend/tests/setup.ts` (importa `@testing-library/jest-dom/vitest` e limpa mocks) e script `test` (`vitest run`) em `frontend/package.json` com @testing-library/react 16.3.3, @testing-library/user-event 14.6.8, @testing-library/jest-dom 7.0.1, jsdom 30.1.2
+- [X] T010 [P] Configurar testes do frontend: `frontend/vitest.config.ts` (ambiente `jsdom`, `setupFiles: tests/setup.ts`), `frontend/tests/setup.ts` (importa `@testing-library/jest-dom/vitest` e limpa mocks) e script `test` (`vitest run`) em `frontend/package.json` com @testing-library/react 16.3.3, @testing-library/user-event 14.6.8, @testing-library/jest-dom 7.0.1, jsdom 30.1.2
 
 ---
 
