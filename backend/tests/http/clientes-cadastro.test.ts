@@ -314,3 +314,32 @@ describe('GET /api/clientes/:id', () => {
     expect(res.body.erro.codigo).toBe('NAO_AUTENTICADO');
   });
 });
+
+describe('POST /api/clientes - mensagens de validação de texto', () => {
+  const CAMPOS_TEXTO = ['nomeCompleto', 'rg', 'logradouro', 'numero', 'cidade'] as const;
+
+  it.each(CAMPOS_TEXTO)('campo %s vazio gera exatamente uma mensagem em campos', async (campo) => {
+    const res = await request(app)
+      .post('/api/clientes')
+      .set('Cookie', cookie)
+      .send(corpoCliente(300, { [campo]: '' }));
+
+    expect(res.status).toBe(400);
+    const doCampo = res.body.erro.campos.filter((c: { campo: string }) => c.campo === campo);
+    expect(doCampo).toHaveLength(1);
+    expect(doCampo[0].mensagem).toMatch(/^Informe /);
+  });
+
+  it.each(CAMPOS_TEXTO)('campo %s com caractere NUL responde 400 VALIDACAO_INVALIDA (e não 500)', async (campo) => {
+    const res = await request(app)
+      .post('/api/clientes')
+      .set('Cookie', cookie)
+      .send(corpoCliente(301, { [campo]: 'Abc\u0000def' }));
+
+    expect(res.status).toBe(400);
+    expect(res.body.erro.codigo).toBe('VALIDACAO_INVALIDA');
+    const doCampo = res.body.erro.campos.filter((c: { campo: string }) => c.campo === campo);
+    expect(doCampo).toHaveLength(1);
+    expect(doCampo[0].mensagem).toMatch(/caractere/i);
+  });
+});
