@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:18
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: contratos
+      POSTGRES_PASSWORD: contratos
+      POSTGRES_DB: contratos
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql
+      - ./docker/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
+
+volumes:
+  pgdata:

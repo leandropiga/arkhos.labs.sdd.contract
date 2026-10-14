@@ -16,3 +16,4 @@ Registro cronológico de cada etapa do laboratório. Cada entrada segue o
 | 08 | [O plano técnico (e o bug que nunca aconteceu)](./08-plano-tecnico.md) | 3 — Planejamento técnico | concluída |
 | 09 | [Quebrando o plano em tarefas](./09-tarefas.md) | 4 — Quebra em tarefas | concluída |
 | 10 | [Conferindo a coerência antes do código](./10-analise.md) | 4 — Quebra em tarefas | concluída |
+| 11 | [Implementação, rodada 1: o MVP de login (T001–T035)](./11-implementacao-rodada-1.md) | 5 — Implementação | concluída |

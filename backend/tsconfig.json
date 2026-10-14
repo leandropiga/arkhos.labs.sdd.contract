@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "target": "ES2024",
+    "noEmit": true
+  },
+  "include": ["src", "tests", "prisma", "*.ts"]
+}

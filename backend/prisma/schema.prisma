@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Usuario {
+  id               String    @id @default(uuid()) @db.Uuid
+  // Guardado em minúsculas pela aplicação; o @unique garante a unicidade.
+  usuario          String    @unique
+  senhaHash        String
+  nome             String    @db.VarChar(120)
+  fotoUrl          String?
+  telefone         String?
+  tentativasFalhas Int       @default(0)
+  bloqueadoAte     DateTime?
+  criadoEm         DateTime  @default(now())
+  atualizadoEm     DateTime  @updatedAt
+}
+
+enum UF {
+  AC
+  AL
+  AP
+  AM
+  BA
+  CE
+  DF
+  ES
+  GO
+  MA
+  MT
+  MS
+  MG
+  PA
+  PB
+  PR
+  PE
+  PI
+  RJ
+  RN
+  RS
+  RO
+  RR
+  SC
+  SP
+  SE
+  TO
+}
+
+model Cliente {
+  id           String     @id @default(uuid()) @db.Uuid
+  nomeCompleto String     @db.VarChar(150)
+  // Derivado de nomeCompleto (sem acento, minúsculo) para a busca.
+  nomeBusca    String     @db.VarChar(150)
+  telefone     String     @db.VarChar(11)
+  cpf          String     @unique @db.VarChar(11)
+  rg           String     @db.VarChar(20)
+  logradouro   String     @db.VarChar(200)
+  numero       String     @db.VarChar(20)
+  cep          String     @db.VarChar(8)
+  cidade       String     @db.VarChar(100)
+  uf           UF
+  criadoEm     DateTime   @default(now())
+  atualizadoEm DateTime   @updatedAt
+  contratos    Contrato[]
+
+  @@index([nomeBusca])
+  @@index([uf])
+}
+
+model Contrato {
+  id                  String    @id @default(uuid()) @db.Uuid
+  titulo              String    @db.VarChar(200)
+  // Derivado de titulo (sem acento, minúsculo) para a busca.
+  tituloBusca         String    @db.VarChar(200)
+  dataAssinatura      DateTime  @db.Date
+  clienteId           String    @db.Uuid
+  cliente             Cliente   @relation(fields: [clienteId], references: [id], onDelete: Restrict)
+  arquivoNomeOriginal String
+  arquivoTamanhoBytes Int
+  // Trava de concorrência da análise (R-09).
+  analiseIniciadaEm   DateTime?
+  criadoEm            DateTime  @default(now())
+  atualizadoEm        DateTime  @updatedAt
+
+  @@index([tituloBusca])
+  @@index([dataAssinatura])
+  @@index([clienteId])
+}

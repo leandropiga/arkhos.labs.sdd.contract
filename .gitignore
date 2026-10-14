@@ -8,6 +8,22 @@ dist/
 .specify/extensions/.cache/
 !.env.*.example
 
+# Setup do monorepo (T002): segredos, dados locais e artefatos
+# Segredos e variáveis de ambiente reais nunca vão para o Git.
+# Os modelos versionáveis (.env.example e .env.test.example) continuam liberados pelas exceções acima.
+backend/.env
+backend/.env.test
+frontend/.env
+node_modules/
+dist/
+
+# Arquivos temporários e de armazenamento locais do backend (PDFs enviados, saídas de teste)
+backend/tmp/
+backend/storage/
+
 # Superpowers: worktrees e ledger de execução (ADR 0010)
 .worktrees/
 .superpowers/
+
+# Client gerado pelo Prisma 7 (P10): recriado por `prisma generate` (postinstall)
+backend/src/generated/
