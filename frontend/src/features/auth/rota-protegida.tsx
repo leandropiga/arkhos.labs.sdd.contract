@@ -5,9 +5,11 @@ import type { Perfil } from '@/features/auth/tipos'
 
 type Estado = { situacao: 'carregando' } | { situacao: 'sem-sessao' } | { situacao: 'ok'; usuario: Perfil }
 
-const SessaoContexto = createContext<{ usuario: Perfil } | null>(null)
+export type Sessao = { usuario: Perfil; atualizarUsuario: (usuario: Perfil) => void }
 
-export function useSessao(): { usuario: Perfil } {
+export const SessaoContexto = createContext<Sessao | null>(null)
+
+export function useSessao(): Sessao {
   const sessao = useContext(SessaoContexto)
   if (!sessao) throw new Error('useSessao deve ser usado dentro de <RotaProtegida />.')
   return sessao
@@ -35,10 +37,13 @@ export function RotaProtegida() {
     }
   }, [])
 
+  // Depois de salvar o perfil, o menu enxerga o novo nome/foto sem recarregar a sessão.
+  const atualizarUsuario = (usuario: Perfil) => setEstado({ situacao: 'ok', usuario })
+
   if (estado.situacao === 'carregando') return null
   if (estado.situacao === 'sem-sessao') return <Navigate to="/login" replace />
   return (
-    <SessaoContexto.Provider value={{ usuario: estado.usuario }}>
+    <SessaoContexto.Provider value={{ usuario: estado.usuario, atualizarUsuario }}>
       <Outlet />
     </SessaoContexto.Provider>
   )

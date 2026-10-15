@@ -20,3 +20,4 @@ Registro cronológico de cada etapa do laboratório. Cada entrada segue o
 | 12 | [Implementação, rodada 2: cadastro de clientes (T036–T046)](./12-implementacao-rodada-2.md) | 5 — Implementação | concluída |
 | 13 | [Implementação, rodada 3: contratos com PDF (T047–T057)](./13-implementacao-rodada-3.md) | 5 — Implementação | concluída |
 | 14 | [Implementação, rodada 4: análise de riscos por IA (T058–T065)](./14-implementacao-rodada-4.md) | 5 — Implementação | concluída |
+| 15 | [Implementação, rodada 5: painel da Home e perfil (T066–T073)](./15-implementacao-rodada-5.md) | 5 — Implementação | concluída |
