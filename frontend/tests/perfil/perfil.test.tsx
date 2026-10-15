@@ -49,11 +49,17 @@ function renderizar() {
 
 // No jsdom nenhuma imagem carrega sozinha: simulamos o navegador para o Avatar do Radix.
 function simularImagens(carrega: boolean) {
-  class ImagemFalsa {
-    onload: (() => void) | null = null
-    onerror: (() => void) | null = null
+  class ImagemFalsa extends EventTarget {
+    complete = false
+    naturalWidth = 0
+    referrerPolicy = ''
+    crossOrigin: string | null = null
     set src(_: string) {
-      queueMicrotask(() => (carrega ? this.onload?.() : this.onerror?.()))
+      setTimeout(() => {
+        this.complete = true
+        this.naturalWidth = carrega ? 10 : 0
+        this.dispatchEvent(new Event(carrega ? 'load' : 'error'))
+      }, 0)
     }
   }
   vi.stubGlobal('Image', ImagemFalsa)

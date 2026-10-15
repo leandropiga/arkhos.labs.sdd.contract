@@ -10,7 +10,7 @@
  * - 401: redireciona para /login.
  * - Evento 'sessao-expirada' em window (FR-004): redireciona para /login.
  *
- * O botão "Sair" fica no LayoutApp (T035): chama POST /api/auth/logout e navega para /login.
+ * O item "Sair" (T035, movido para o Menu de Perfil na T073) fica no LayoutApp: chama POST /api/auth/logout e navega para /login.
  */
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -99,7 +99,10 @@ describe('RotaProtegida (História 1, FR-001, FR-003, FR-004)', () => {
     renderizar()
     await screen.findByText('Página inicial')
 
-    await userEvent.setup().click(screen.getByRole('button', { name: 'Sair' }))
+    // "Sair" mora no Menu de Perfil (T073): abre o menu e escolhe o item.
+    const usuario = userEvent.setup()
+    await usuario.click(screen.getByRole('button', { name: 'Menu do perfil' }))
+    await usuario.click(await screen.findByRole('menuitem', { name: 'Sair' }))
 
     expect(await screen.findByText('Tela de login')).toBeInTheDocument()
     expect(fetchMock).toHaveBeenCalledWith('/api/auth/logout', expect.objectContaining({ method: 'POST' }))

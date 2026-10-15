@@ -10,8 +10,7 @@ import { FormContrato } from '@/features/contratos/form-contrato'
 import { DetalheContrato } from '@/features/contratos/detalhe-contrato'
 import { Home } from '@/features/painel/home'
 
-// Placeholders: as telas reais chegam nas tarefas das histórias de usuário.
-const Pagina = ({ titulo }: { titulo: string }) => <h1 className="text-2xl font-bold">{titulo}</h1>
+import { TelaPerfil } from '@/features/perfil/tela-perfil'
 
 export function Rotas() {
   return (
@@ -28,7 +27,7 @@ export function Rotas() {
           <Route path="/contratos/novo" element={<FormContrato />} />
           <Route path="/contratos/:id" element={<DetalheContrato />} />
           <Route path="/contratos/:id/editar" element={<FormContrato />} />
-          <Route path="/perfil" element={<Pagina titulo="Perfil" />} />
+          <Route path="/perfil" element={<TelaPerfil />} />
         </Route>
       </Route>
     </Routes>
