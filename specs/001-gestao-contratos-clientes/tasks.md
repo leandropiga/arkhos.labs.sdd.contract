@@ -206,13 +206,13 @@ batem com os cadastros.
 
 ### Testes da História 5 (escrever primeiro e ver falhar)
 
-- [ ] T066 [P] [US5] Teste HTTP em `backend/tests/http/painel.test.ts`: banco vazio → `totalClientes: 0`, `totalContratos: 0`, `clientesPorUf: []`; com 3 clientes em SP, 1 em MG e 2 contratos → totais corretos e só UFs com clientes
-- [ ] T067 [P] [US5] Teste da Home em `frontend/tests/painel/home.test.tsx`: mostra os dois totais e o gráfico; com `clientesPorUf: []` mostra o estado vazio explicativo
+- [X] T066 [P] [US5] Teste HTTP em `backend/tests/http/painel.test.ts`: banco vazio → `totalClientes: 0`, `totalContratos: 0`, `clientesPorUf: []`; com 3 clientes em SP, 1 em MG e 2 contratos → totais corretos e só UFs com clientes
+- [X] T067 [P] [US5] Teste da Home em `frontend/tests/painel/home.test.tsx`: mostra os dois totais e o gráfico; com `clientesPorUf: []` mostra o estado vazio explicativo
 
 ### Implementação da História 5
 
-- [ ] T068 [US5] Criar `backend/src/modules/painel/servico-painel.ts` (contagens e `groupBy` por `uf`) e `backend/src/modules/painel/rotas-painel.ts` (`GET /api/painel`), registrar em `backend/src/app.ts` até T066 passar
-- [ ] T069 [US5] Criar `frontend/src/features/painel/home.tsx` (Cards com os totais e gráfico de barras com o Chart do shadcn/ui; estado vazio) e ligar na rota `/` em `frontend/src/rotas.tsx` até T067 passar
+- [X] T068 [US5] Criar `backend/src/modules/painel/servico-painel.ts` (contagens e `groupBy` por `uf`) e `backend/src/modules/painel/rotas-painel.ts` (`GET /api/painel`), registrar em `backend/src/app.ts` até T066 passar
+- [X] T069 [US5] Criar `frontend/src/features/painel/home.tsx` (Cards com os totais e gráfico de barras com o Chart do shadcn/ui; estado vazio) e ligar na rota `/` em `frontend/src/rotas.tsx` até T067 passar
 
 **Checkpoint**: Histórias 1 a 5 funcionam de forma independente.
 
@@ -227,13 +227,13 @@ iniciais).
 
 ### Testes da História 6 (escrever primeiro e ver falhar)
 
-- [ ] T070 [P] [US6] Teste HTTP em `backend/tests/http/perfil.test.ts`: `GET /api/perfil` devolve o perfil sem `senhaHash`; `PUT` válido → `200`; `fotoUrl` "URL `http` ou `https` válida" (outra coisa → `400 VALIDACAO_INVALIDA` em `fotoUrl`); `nome` vazio → `400`; telefone "só dígitos, 10 ou 11"
-- [ ] T071 [P] [US6] Teste do perfil em `frontend/tests/perfil/perfil.test.tsx`: salvar atualiza nome e foto no menu; URL inválida mostra erro no campo; sem foto (ou foto que não carrega) mostra as iniciais no Avatar
+- [X] T070 [P] [US6] Teste HTTP em `backend/tests/http/perfil.test.ts`: `GET /api/perfil` devolve o perfil sem `senhaHash`; `PUT` válido → `200`; `fotoUrl` "URL `http` ou `https` válida" (outra coisa → `400 VALIDACAO_INVALIDA` em `fotoUrl`); `nome` vazio → `400`; telefone "só dígitos, 10 ou 11"
+- [X] T071 [P] [US6] Teste do perfil em `frontend/tests/perfil/perfil.test.tsx`: salvar atualiza nome e foto no menu; URL inválida mostra erro no campo; sem foto (ou foto que não carrega) mostra as iniciais no Avatar
 
 ### Implementação da História 6
 
-- [ ] T072 [US6] Criar `backend/src/modules/perfil/rotas-perfil.ts` com esquema zod e `GET/PUT /api/perfil`, registrar em `backend/src/app.ts` até T070 passar
-- [ ] T073 [US6] Criar `frontend/src/features/perfil/tela-perfil.tsx` (Form do shadcn/ui) e o Menu de Perfil em `frontend/src/components/layout/menu-perfil.tsx` (Avatar com fallback de iniciais + DropdownMenu com "Meu perfil" e "Sair"; o botão "Sair" criado na T035 é **movido** do layout para este menu, mantendo T031 verde), ligar a rota `/perfil` até T071 passar
+- [X] T072 [US6] Criar `backend/src/modules/perfil/rotas-perfil.ts` com esquema zod e `GET/PUT /api/perfil`, registrar em `backend/src/app.ts` até T070 passar
+- [X] T073 [US6] Criar `frontend/src/features/perfil/tela-perfil.tsx` (Form do shadcn/ui) e o Menu de Perfil em `frontend/src/components/layout/menu-perfil.tsx` (Avatar com fallback de iniciais + DropdownMenu com "Meu perfil" e "Sair"; o botão "Sair" criado na T035 é **movido** do layout para este menu, mantendo T031 verde), ligar a rota `/perfil` até T071 passar
 
 **Checkpoint**: todas as histórias funcionam de forma independente.
 
