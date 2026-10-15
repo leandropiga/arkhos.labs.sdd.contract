@@ -243,10 +243,10 @@ iniciais).
 
 **Propósito**: requisitos que atravessam várias histórias e a validação final.
 
-- [ ] T074 [P] Teste HTTP transversal em `backend/tests/http/seguranca.test.ts`: toda rota listada em [contracts/api.md](./contracts/api.md), exceto `POST /api/auth/login`, devolve `401` sem cookie (SC-005); nenhuma resposta de erro contém `stack`, `prisma`, caminho de arquivo ou o valor de `GEMINI_API_KEY` (SC-009)
-- [ ] T075 [P] Teste de desempenho em `backend/tests/http/desempenho.test.ts`: com 10.000 clientes e 10.000 contratos inseridos em lote, listagens e filtros respondem em até 2 s (SC-004)
-- [ ] T076 Conferir que o bundle do frontend não contém `GEMINI_API_KEY` nem chamadas ao Gemini (`npm run build` em `frontend/` e busca no `frontend/dist/`) (Princípio V)
-- [ ] T077 [P] Criar o `README.md` da raiz com o resumo do projeto e o link para [quickstart.md](./quickstart.md)
+- [X] T074 [P] Teste HTTP transversal em `backend/tests/http/seguranca.test.ts`: toda rota listada em [contracts/api.md](./contracts/api.md), exceto `POST /api/auth/login`, devolve `401` sem cookie (SC-005); nenhuma resposta de erro contém `stack`, `prisma`, caminho de arquivo ou o valor de `GEMINI_API_KEY` (SC-009)
+- [X] T075 [P] Teste de desempenho em `backend/tests/http/desempenho.test.ts`: com 10.000 clientes e 10.000 contratos inseridos em lote, listagens e filtros respondem em até 2 s (SC-004)
+- [X] T076 Conferir que o bundle do frontend não contém `GEMINI_API_KEY` nem chamadas ao Gemini (`npm run build` em `frontend/` e busca no `frontend/dist/`) (Princípio V)
+- [X] T077 [P] Criar o `README.md` da raiz com o resumo do projeto e o link para [quickstart.md](./quickstart.md)
 - [ ] T078 Executar o roteiro de validação manual de [quickstart.md](./quickstart.md) (14 passos) e registrar o resultado no diário
 
 ---
