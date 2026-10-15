@@ -6,6 +6,7 @@ import { criarRotasAnalise, type OpcoesAnalise } from './modules/analise/rotas-a
 import { rotasAuth } from './modules/auth/rotas-auth.js';
 import { rotasClientes } from './modules/clientes/rotas-clientes.js';
 import { rotasContratos } from './modules/contratos/rotas-contratos.js';
+import { rotasPainel } from './modules/painel/rotas-painel.js';
 
 /**
  * Fábrica do app Express: devolve um app novo a cada chamada, sem chamar listen.
@@ -27,6 +28,7 @@ export function criarApp(opcoes: OpcoesAnalise = {}): Express {
   // Antes de rotasContratos: POST /:id/analise; as demais rotas seguem para rotasContratos.
   api.use('/contratos', criarRotasAnalise(opcoes));
   api.use('/contratos', rotasContratos);
+  api.use('/painel', rotasPainel);
   api.use((_req, _res, next) => {
     next(new ErroApp(404, 'NAO_ENCONTRADO', 'Recurso não encontrado.'));
   });
