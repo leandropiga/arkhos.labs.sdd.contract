@@ -8,6 +8,7 @@ import { DetalheCliente } from '@/features/clientes/detalhe-cliente'
 import { ListaContratos } from '@/features/contratos/lista-contratos'
 import { FormContrato } from '@/features/contratos/form-contrato'
 import { DetalheContrato } from '@/features/contratos/detalhe-contrato'
+import { Home } from '@/features/painel/home'
 
 // Placeholders: as telas reais chegam nas tarefas das histórias de usuário.
 const Pagina = ({ titulo }: { titulo: string }) => <h1 className="text-2xl font-bold">{titulo}</h1>
@@ -18,7 +19,7 @@ export function Rotas() {
       <Route path="/login" element={<TelaLogin />} />
       <Route element={<RotaProtegida />}>
         <Route element={<LayoutApp />}>
-          <Route path="/" element={<Pagina titulo="Home" />} />
+          <Route path="/" element={<Home />} />
           <Route path="/clientes" element={<ListaClientes />} />
           <Route path="/clientes/novo" element={<FormCliente />} />
           <Route path="/clientes/:id" element={<DetalheCliente />} />
