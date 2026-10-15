@@ -2,7 +2,7 @@
  * Interface que a T035 deve implementar em `frontend/src/features/auth/rota-protegida.tsx`:
  *
  *   export function RotaProtegida(): JSX.Element
- *   export function useSessao(): { usuario: Perfil }
+ *   export function useSessao(): { usuario: Perfil, atualizarUsuario: (usuario: Perfil) => void }
  *
  * - Componente de rota de layout: consulta GET /api/auth/sessao (via api()).
  * - Enquanto carrega: não mostra o conteúdo protegido nem redireciona.
@@ -10,7 +10,7 @@
  * - 401: redireciona para /login.
  * - Evento 'sessao-expirada' em window (FR-004): redireciona para /login.
  *
- * O item "Sair" (T035, movido para o Menu de Perfil na T073) fica no LayoutApp: chama POST /api/auth/logout e navega para /login.
+ * O item "Sair" (T035) ficou no Menu de Perfil (frontend/src/components/layout/menu-perfil.tsx) na T073, saindo do LayoutApp: chama POST /api/auth/logout e navega para /login.
  */
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'

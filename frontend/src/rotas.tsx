@@ -9,7 +9,6 @@ import { ListaContratos } from '@/features/contratos/lista-contratos'
 import { FormContrato } from '@/features/contratos/form-contrato'
 import { DetalheContrato } from '@/features/contratos/detalhe-contrato'
 import { Home } from '@/features/painel/home'
-
 import { TelaPerfil } from '@/features/perfil/tela-perfil'
 
 export function Rotas() {
