@@ -81,6 +81,8 @@ rotasContratos.get('/:id/arquivo', async (req, res, next) => {
     const { caminho, nomeOriginal } = await localizarArquivo(req.params.id);
     res.type('application/pdf');
     res.setHeader('Content-Disposition', disposicaoInline(nomeOriginal));
+    res.setHeader('Cache-Control', 'private, no-store');
+    res.setHeader('X-Content-Type-Options', 'nosniff');
     res.sendFile(caminho, { dotfiles: 'allow' }, (erro) => {
       if (!erro) return;
       if (res.headersSent) {
@@ -88,6 +90,8 @@ rotasContratos.get('/:id/arquivo', async (req, res, next) => {
         return;
       }
       res.removeHeader('Content-Disposition');
+      res.removeHeader('Cache-Control');
+      res.removeHeader('X-Content-Type-Options');
       // Linha no banco sem o PDF no disco: para o cliente, o arquivo não existe.
       next(
         (erro as { code?: string }).code === 'ENOENT'

@@ -338,3 +338,16 @@ Cada história fecha com todos os testes verdes e um commit, sem quebrar as ante
 - Fazer commit ao fim de cada tarefa ou grupo lógico.
 - Evitar: tarefas vagas, duas tarefas no mesmo arquivo em paralelo, dependências que quebrem a
   independência das histórias.
+
+---
+
+## Fase 10: Dívidas técnicas antes do deploy
+
+**Propósito**: fechar as dívidas anotadas nas rodadas 3 a 6 que afetam produção ou segurança. Tarefas
+criadas depois do plano original (divergência registrada no diário 18).
+
+- [X] T079 [P] Fazer `backend/src/lib/armazenamento.ts` aguentar `EXDEV` (tmp e storage em volumes diferentes): se `rename` falhar com `EXDEV`, copiar para o destino e apagar o temporário. Teste em `backend/tests/` simulando o `EXDEV`
+- [X] T080 [P] Acrescentar `Cache-Control: private, no-store` e `X-Content-Type-Options: nosniff` na resposta de `GET /api/contratos/:id/arquivo`, com teste em `backend/tests/http/`
+- [X] T081 Fechar a corrida estreita do `PUT /api/contratos/:id`: a transação confirma antes do `rename` do PDF novo, e um `POST /analise` nesse intervalo pode gravar a análise do PDF antigo como se fosse do novo. Corrigir com a menor mudança possível e provar com teste
+- [X] T082 [P] Limitar `fotoUrl` a 2048 caracteres no backend (zod em `rotas-perfil.ts`, `400 VALIDACAO_INVALIDA`) e no formulário do frontend (`tela-perfil.tsx`), com teste nos dois lados
+- [X] T083 [P] Reduzir o bundle inicial do frontend (hoje 964 kB, aviso do Vite) com `React.lazy` nas telas das rotas e/ou `manualChunks`, sem quebrar os testes; registrar o tamanho antes e depois

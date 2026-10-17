@@ -128,6 +128,19 @@ describe('Perfil (História 6, FR-005)', () => {
     expect(chamadasPut()).toHaveLength(0)
   })
 
+  it('URL da foto com mais de 2048 caracteres mostra o erro no campo e não envia', async () => {
+    const usuario = userEvent.setup()
+    renderizar()
+    const campo = await screen.findByLabelText('URL da foto')
+    await usuario.click(campo)
+    await usuario.paste('https://exemplo.com/' + 'a'.repeat(2048))
+    await usuario.click(screen.getByRole('button', { name: 'Salvar' }))
+
+    expect(await screen.findByText('A URL da foto deve ter no máximo 2048 caracteres.')).toBeInTheDocument()
+    expect(campo).toHaveAttribute('aria-invalid', 'true')
+    expect(chamadasPut()).toHaveLength(0)
+  })
+
   it('mostra o erro de campo devolvido pela API (400 VALIDACAO_INVALIDA)', async () => {
     const usuario = userEvent.setup()
     renderizar()

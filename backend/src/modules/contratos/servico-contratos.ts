@@ -117,28 +117,39 @@ export async function editarContrato(
   if (!UUID.test(id)) throw naoEncontrado();
   await garantirCliente(dados.clienteId);
 
-  const atualizacao = prisma.contrato.update({
-    where: { id },
-    data: {
-      ...dadosParaBanco(dados),
-      ...(arquivo
-        ? {
-            arquivoNomeOriginal: arquivo.nomeOriginal,
-            arquivoTamanhoBytes: arquivo.tamanhoBytes,
-            analiseIniciadaEm: null,
-          }
-        : {}),
-    },
-    include: incluirDetalhe,
-  });
+  const dadosAtualizacao = {
+    ...dadosParaBanco(dados),
+    ...(arquivo
+      ? {
+          arquivoNomeOriginal: arquivo.nomeOriginal,
+          arquivoTamanhoBytes: arquivo.tamanhoBytes,
+          analiseIniciadaEm: null,
+        }
+      : {}),
+  };
 
   let atualizado: ContratoDetalhado;
   try {
-    // FR-031: PDF novo invalida a análise anterior, então ela sai na mesma transação do update.
-    // (deleteMany em vez de delete: não falha se o contrato nunca teve análise.)
-    atualizado = arquivo
-      ? (await prisma.$transaction([prisma.analiseContrato.deleteMany({ where: { contratoId: id } }), atualizacao]))[1]
-      : await atualizacao;
+    if (arquivo) {
+      // FR-031: PDF novo invalida a análise anterior, então ela sai na mesma transação do update.
+      // O rename do PDF acontece DENTRO da transação, depois das escritas e antes do commit: o
+      // update segura o lock da linha do contrato, então um POST /analise concorrente espera o
+      // commit e, quando obtém a trava, já lê o PDF novo. (Antes, o rename vinha depois do commit
+      // e a análise podia ler o PDF antigo com a trava livre.) Se o rename falhar, tudo é desfeito.
+      // (deleteMany em vez de delete: não falha se o contrato nunca teve análise.)
+      atualizado = await prisma.$transaction(
+        async (tx) => {
+          await tx.analiseContrato.deleteMany({ where: { contratoId: id } });
+          const linha = await tx.contrato.update({ where: { id }, data: dadosAtualizacao, include: incluirDetalhe });
+          // O rename sobrescreve o PDF antigo (mesmo id): não sobra arquivo velho no storage.
+          await salvarDoTemporario(arquivo.caminhoTmp, id);
+          return linha;
+        },
+        { timeout: 30_000 },
+      );
+    } else {
+      atualizado = await prisma.contrato.update({ where: { id }, data: dadosAtualizacao, include: incluirDetalhe });
+    }
   } catch (erro) {
     const codigo = codigoPrisma(erro);
     if (codigo === 'P2025') throw naoEncontrado();
@@ -146,8 +157,6 @@ export async function editarContrato(
     throw erro;
   }
 
-  // O rename sobrescreve o PDF antigo (mesmo id): não sobra arquivo velho no storage.
-  if (arquivo) await salvarDoTemporario(arquivo.caminhoTmp, id);
   return paraDto(atualizado);
 }
 

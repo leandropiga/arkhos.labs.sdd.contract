@@ -101,6 +101,29 @@ describe('PUT /api/perfil', () => {
     expect(camposInvalidos(res)).toEqual(['fotoUrl']);
   });
 
+  it('fotoUrl com 2049 caracteres (um acima do limite) responde 400 VALIDACAO_INVALIDA no campo fotoUrl', async () => {
+    const fotoUrl = `https://exemplo.com/${'a'.repeat(2049 - 'https://exemplo.com/'.length)}`;
+    expect(fotoUrl).toHaveLength(2049);
+
+    const res = await request(app)
+      .put('/api/perfil')
+      .set('Cookie', cookie)
+      .send({ ...corpoValido, fotoUrl });
+
+    expect(res.status).toBe(400);
+    expect(res.body.erro.codigo).toBe('VALIDACAO_INVALIDA');
+    expect(camposInvalidos(res)).toEqual(['fotoUrl']);
+  });
+
+  it('fotoUrl com exatamente 2048 caracteres é aceita', async () => {
+    const fotoUrl = `https://exemplo.com/${'a'.repeat(2048 - 'https://exemplo.com/'.length)}`;
+    expect(fotoUrl).toHaveLength(2048);
+
+    const res = await request(app).put('/api/perfil').set('Cookie', cookie).send({ ...corpoValido, fotoUrl });
+
+    expect(res.status).toBe(200);
+  });
+
   it.each([['vazio', ''], ['só espaços', '   ']])(
     'nome %s responde 400 VALIDACAO_INVALIDA no campo nome',
     async (_r, nome) => {

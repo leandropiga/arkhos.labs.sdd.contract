@@ -10,6 +10,7 @@ import { useSessao } from '@/features/auth/rota-protegida'
 import type { Perfil } from '@/features/auth/tipos'
 
 const MSG_FOTO = 'URL da foto inválida. Use um endereço http ou https.'
+const MSG_FOTO_LONGA = 'A URL da foto deve ter no máximo 2048 caracteres.'
 const MSG_TELEFONE = 'Telefone inválido. Informe DDD e número (10 ou 11 dígitos).'
 
 function ehUrlHttp(valor: string): boolean {
@@ -23,7 +24,7 @@ function ehUrlHttp(valor: string): boolean {
 
 const esquema = z.object({
   nome: z.string().trim().min(1, 'Informe o nome.').max(120, 'O nome deve ter no máximo 120 caracteres.'),
-  fotoUrl: z.string().trim().refine((v) => v === '' || ehUrlHttp(v), MSG_FOTO),
+  fotoUrl: z.string().trim().max(2048, MSG_FOTO_LONGA).refine((v) => v === '' || ehUrlHttp(v), MSG_FOTO),
   telefone: z
     .string()
     .trim()

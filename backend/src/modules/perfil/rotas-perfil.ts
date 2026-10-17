@@ -6,6 +6,7 @@ import { prisma } from '../../lib/prisma.js';
 
 const MSG_NOME = 'Informe o nome.';
 const MSG_FOTO = 'URL da foto inválida. Use um endereço http ou https.';
+const MSG_FOTO_TAMANHO = 'A URL da foto deve ter no máximo 2048 caracteres.';
 const MSG_TELEFONE = 'Telefone inválido. Informe DDD e número (10 ou 11 dígitos).';
 
 /** Texto opcional: ausente, nulo ou vazio viram null. */
@@ -32,6 +33,7 @@ export const esquemaPerfil = z.object({
     z
       .string({ error: MSG_FOTO })
       .trim()
+      .max(2048, MSG_FOTO_TAMANHO)
       .refine(ehUrlHttp, MSG_FOTO)
       .nullable(),
   ),

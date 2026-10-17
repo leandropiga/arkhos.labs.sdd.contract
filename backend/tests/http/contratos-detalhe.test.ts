@@ -259,6 +259,16 @@ describe('GET /api/contratos/:id/arquivo', () => {
     expect((res.body as Buffer).equals(ORIGINAL)).toBe(true);
   });
 
+  it('manda Cache-Control private, no-store e X-Content-Type-Options nosniff', async () => {
+    const contrato = await criarContratoComPdf();
+
+    const res = await request(app).get(`/api/contratos/${contrato.id}/arquivo`).set('Cookie', cookie);
+
+    expect(res.status).toBe(200);
+    expect(res.headers['cache-control']).toBe('private, no-store');
+    expect(res.headers['x-content-type-options']).toBe('nosniff');
+  });
+
   it('id inexistente responde 404 NAO_ENCONTRADO em JSON', async () => {
     const res = await request(app).get(`/api/contratos/${INEXISTENTE}/arquivo`).set('Cookie', cookie);
 

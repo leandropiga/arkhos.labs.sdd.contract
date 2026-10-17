@@ -23,3 +23,4 @@ Registro cronológico de cada etapa do laboratório. Cada entrada segue o
 | 15 | [Implementação, rodada 5: painel da Home e perfil (T066–T073)](./15-implementacao-rodada-5.md) | 5 — Implementação | concluída |
 | 16 | [Implementação, rodada 6: acabamento (T074–T077)](./16-implementacao-rodada-6.md) | 5 — Implementação | concluída |
 | 17 | [Validação manual: o roteiro do quickstart (T078)](./17-validacao-manual-quickstart.md) | 6 — Testes e validação | concluída |
+| 18 | [Implementação, rodada 7: dívidas antes do deploy (T079–T083)](./18-implementacao-rodada-7-dividas.md) | 6 — Testes e validação | concluída |
