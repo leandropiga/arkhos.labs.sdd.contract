@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router";
 import { TelaLogin } from "@/features/auth/tela-login";
 import { RotaProtegida } from "@/features/auth/rota-protegida";
 import { LayoutApp } from "@/components/layout/layout-app";
+import { ErroBoundary } from "@/components/erro-boundary";
 
 const ListaClientes = lazy(() =>
   import("@/features/clientes/lista-clientes").then((m) => ({
@@ -45,28 +46,30 @@ const TelaPerfil = lazy(() =>
 
 export function Rotas() {
   return (
-    <Suspense
-      fallback={
-        <p className="p-6 text-sm text-muted-foreground">Carregando...</p>
-      }
-    >
-      <Routes>
-        <Route path="/login" element={<TelaLogin />} />
-        <Route element={<RotaProtegida />}>
-          <Route element={<LayoutApp />}>
-            <Route path="/" element={<Home />} />
-            <Route path="/clientes" element={<ListaClientes />} />
-            <Route path="/clientes/novo" element={<FormCliente />} />
-            <Route path="/clientes/:id" element={<DetalheCliente />} />
-            <Route path="/clientes/:id/editar" element={<FormCliente />} />
-            <Route path="/contratos" element={<ListaContratos />} />
-            <Route path="/contratos/novo" element={<FormContrato />} />
-            <Route path="/contratos/:id" element={<DetalheContrato />} />
-            <Route path="/contratos/:id/editar" element={<FormContrato />} />
-            <Route path="/perfil" element={<TelaPerfil />} />
+    <ErroBoundary>
+      <Suspense
+        fallback={
+          <p className="p-6 text-sm text-muted-foreground">Carregando...</p>
+        }
+      >
+        <Routes>
+          <Route path="/login" element={<TelaLogin />} />
+          <Route element={<RotaProtegida />}>
+            <Route element={<LayoutApp />}>
+              <Route path="/" element={<Home />} />
+              <Route path="/clientes" element={<ListaClientes />} />
+              <Route path="/clientes/novo" element={<FormCliente />} />
+              <Route path="/clientes/:id" element={<DetalheCliente />} />
+              <Route path="/clientes/:id/editar" element={<FormCliente />} />
+              <Route path="/contratos" element={<ListaContratos />} />
+              <Route path="/contratos/novo" element={<FormContrato />} />
+              <Route path="/contratos/:id" element={<DetalheContrato />} />
+              <Route path="/contratos/:id/editar" element={<FormContrato />} />
+              <Route path="/perfil" element={<TelaPerfil />} />
+            </Route>
           </Route>
-        </Route>
-      </Routes>
-    </Suspense>
+        </Routes>
+      </Suspense>
+    </ErroBoundary>
   );
 }

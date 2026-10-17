@@ -351,3 +351,13 @@ criadas depois do plano original (divergência registrada no diário 18).
 - [X] T081 Fechar a corrida estreita do `PUT /api/contratos/:id`: a transação confirma antes do `rename` do PDF novo, e um `POST /analise` nesse intervalo pode gravar a análise do PDF antigo como se fosse do novo. Corrigir com a menor mudança possível e provar com teste
 - [X] T082 [P] Limitar `fotoUrl` a 2048 caracteres no backend (zod em `rotas-perfil.ts`, `400 VALIDACAO_INVALIDA`) e no formulário do frontend (`tela-perfil.tsx`), com teste nos dois lados
 - [X] T083 [P] Reduzir o bundle inicial do frontend (hoje 964 kB, aviso do Vite) com `React.lazy` nas telas das rotas e/ou `manualChunks`, sem quebrar os testes; registrar o tamanho antes e depois
+
+---
+
+## Fase 11: Deploy local (fase 7 do laboratório)
+
+**Propósito**: o deploy é local ([ADR 0003](../../docs/decisoes/0003-deploy-local-com-sugestoes.md)); fechar o que falta para a aplicação subir do zero com segurança.
+
+- [X] T084 Criar um `ErrorBoundary` no frontend (em volta do `Suspense` das rotas) que, quando uma tela lazy falhar ao carregar (chunk antigo depois de um deploy, rede caída), mostre mensagem em português com botão "Recarregar a página" (`window.location.reload()`); teste em `frontend/tests/`
+- [X] T085 Verificar a instalação limpa: clone novo do repositório em pasta temporária, `npm ci` nos dois pacotes, testes do backend e do frontend e `npm run build`, registrando o resultado no diário
+- [X] T086 [P] Acrescentar ao `README.md` a seção "Onde publicar (sugestões)" com Render, Railway e VPS com Docker Compose, sem executar nada

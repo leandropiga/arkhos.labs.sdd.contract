@@ -39,6 +39,30 @@ cd frontend && npm install && npm run dev
 Antes de subir o backend, preencha o `.env` (`GEMINI_API_KEY`, `JWT_SECRET`, `SEED_USUARIO`, `SEED_SENHA`).
 O app abre em `http://localhost:5173`.
 
+## Onde publicar (sugestões)
+
+Neste laboratório o deploy é **local** ([ADR 0003](docs/decisoes/0003-deploy-local-com-sugestoes.md)):
+a aplicação roda inteira na sua máquina, e a gente **não validou nada em nuvem**. Se quiser
+publicar, estas são três opções, do caminho mais fácil ao mais trabalhoso. Não tem passo a passo.
+
+| Opção | Perfil | O que esperar |
+|---|---|---|
+| **Render** | Deploy direto do GitHub, com Postgres gerenciado | Mais simples para começar. Dá para ter um nível gratuito, com limites. |
+| **Railway** | Parecido com o Render, com cobrança por uso | Também liga no GitHub e oferece Postgres pronto. |
+| **VPS com Docker Compose** | Um servidor seu, onde você sobe o `docker-compose.yml` | Mais controle e mais aprendizado de infraestrutura, mas você cuida de servidor, domínio e HTTPS. |
+
+Pontos de atenção que a gente **não testou** e que valem em qualquer uma das três:
+
+- **Variáveis de ambiente:** `DATABASE_URL`, `JWT_SECRET` (longo e aleatório), `GEMINI_API_KEY`,
+  `SEED_USUARIO` e `SEED_SENHA` precisam existir no servidor. Nunca coloque a chave do Gemini no frontend.
+- **Domínio e cookies:** a sessão usa um cookie. Em domínio real, com HTTPS, confira as opções do
+  cookie e se frontend e API ficam no mesmo domínio (ou como fica o CORS, se forem separados).
+- **PDFs precisam de disco que sobrevive:** os contratos ficam em arquivos (`STORAGE_DIR`). Em
+  plataformas com disco descartável, os PDFs somem a cada novo deploy; use um volume persistente.
+- **Migrações:** rode `npx prisma migrate deploy` a cada publicação, e o `npm run seed` só na primeira.
+- **Gemini:** o modelo às vezes fica sobrecarregado (já aconteceu na validação manual). O app mostra
+  uma mensagem amigável, mas vale ficar de olho no custo e nos limites da sua chave.
+
 ## Como navegar
 
 - [`docs/diario/`](docs/diario/README.md) — o passo a passo, em ordem.
