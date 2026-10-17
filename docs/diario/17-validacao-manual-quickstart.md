@@ -1,8 +1,8 @@
 # 17 — Validação manual: o roteiro do quickstart (T078)
 
-- **Data:** 2026-10-15 a 2026-10-16
+- **Data:** 2026-10-15 a 2026-10-17
 - **Fase:** 6 — Testes e validação
-- **Status:** em andamento (faltam os passos 9, 10 e 11; falta registrar os passos 1 a 5)
+- **Status:** concluída (14 de 14 passos validados)
 
 ## Objetivo
 
@@ -61,15 +61,22 @@ Gerei três arquivos fora do repositório (em `Downloads/arquivos-teste-contrato
 
 | # | Passo | Resultado |
 |---|---|---|
+| 1 | Abrir `/clientes` sem login | ok (vai para `/login`) |
+| 2 | Entrar com o usuário do seed | ok (menu com Home, Clientes e Contratos) |
+| 3 | 5 senhas erradas | ok (aviso de bloqueio temporário; o desbloqueio de 15 min não foi esperado) |
+| 4 | Cadastrar 2 clientes; repetir CPF | ok (CPF repetido recusado) |
+| 5 | Filtros por nome sem acento e CPF com pontuação | ok |
 | 6 | Contrato com PDF válido, falso e grande | ok |
 | 7 | Filtros, detalhe e abrir o PDF | ok |
 | 8 | Excluir cliente que tem contrato | ok (bloqueado, com a quantidade) |
-| 9 | Solicitar análise de PDF | **falhou, ver abaixo** |
+| 9 | Solicitar análise de PDF | ok na segunda tentativa (a primeira bateu no 503 do Gemini, ver abaixo) |
+| 10 | Sair da tela e voltar | ok (análise continua visível) |
+| 11 | Chave inválida no `.env` | ok (aviso de indisponível; análise anterior continua) |
 | 12 | Home com gráfico por UF e totais | ok |
 | 13 | Perfil: nome, foto e telefone | ok |
 | 14 | `backend/tmp/uploads` vazio | ok |
 
-### 4. O passo 9 falhou: e a culpa não era nossa
+### 4. O passo 9 falhou (de primeira): e a culpa não era nossa
 
 Na tela apareceu "serviço de análise temporariamente indisponível". Primeiro reflexo: achar que o
 nosso código estava com bug. Antes de mexer em qualquer coisa, olhei o log do backend. Ele mostra
@@ -85,8 +92,25 @@ Foram duas tentativas, as duas com 503. O app fez o certo: mapeou o erro para `5
 e mostrou a mensagem combinada, sem vazar nada técnico (Princípio III). Sem querer, isso já foi um
 ensaio do passo 11.
 
+Mais tarde o Gemini voltou ao normal e a análise funcionou, sem mexer em código.
+
 > Lição para o tutorial: **leia o log antes de "consertar"**. A mensagem da tela é genérica de
 > propósito; o motivo de verdade está no log do servidor.
+
+### 5. Passo 11: o `.env` só é lido na partida
+
+Para simular a chave inválida, a troca no `backend/.env` não bastou: o servidor leu o arquivo ao
+subir. Foi preciso **reiniciar o backend** (`tsx watch` vigia o código, não o `.env`). Depois do
+teste, o mesmo na volta: restaurar a chave e reiniciar. Vale avisar o leitor do tutorial.
+
+```powershell
+# parar o que escuta na porta 3000 e subir de novo
+Get-NetTCPConnection -LocalPort 3000 -State Listen | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force }
+```
+
+```bash
+cd backend && npm run dev
+```
 
 ## Prompts utilizados
 
@@ -98,6 +122,7 @@ Nenhum prompt novo ao framework nesta etapa. A conversa foi de condução do rot
 |---|---|
 | `backend/.env` | completado (fora do Git) |
 | `docs/diario/17-validacao-manual-quickstart.md` | esta entrada |
+| `specs/.../tasks.md` | T078 marcada `[X]` |
 
 ## Problemas e soluções
 
@@ -105,11 +130,11 @@ Ver os tropeços 1 e 2 e o passo 9 acima.
 
 ## Aprendizados
 
+- **Mudou `.env`? Reinicie o servidor.** Variáveis de ambiente são lidas só na partida.
 - Uma IA externa **vai** ficar indisponível de vez em quando. Tratar isso com mensagem amigável não
   é capricho, é requisito.
 - Testar com a chave real mostra coisas que os testes com IA "de mentirinha" não mostram.
 
 ## Próximo passo
 
-- Repetir o passo 9 quando o Gemini normalizar; depois os passos 10 e 11.
-- Registrar os passos 1 a 5 e fechar a etapa (commit, push e tag da fase).
+- Fase 7: deploy. Dívidas para olhar antes: as listadas nas entradas 15 e 16 e o chunk de 964 kB.

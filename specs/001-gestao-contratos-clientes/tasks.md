@@ -247,7 +247,7 @@ iniciais).
 - [X] T075 [P] Teste de desempenho em `backend/tests/http/desempenho.test.ts`: com 10.000 clientes e 10.000 contratos inseridos em lote, listagens e filtros respondem em até 2 s (SC-004)
 - [X] T076 Conferir que o bundle do frontend não contém `GEMINI_API_KEY` nem chamadas ao Gemini (`npm run build` em `frontend/` e busca no `frontend/dist/`) (Princípio V)
 - [X] T077 [P] Criar o `README.md` da raiz com o resumo do projeto e o link para [quickstart.md](./quickstart.md)
-- [ ] T078 Executar o roteiro de validação manual de [quickstart.md](./quickstart.md) (14 passos) e registrar o resultado no diário
+- [X] T078 Executar o roteiro de validação manual de [quickstart.md](./quickstart.md) (14 passos) e registrar o resultado no diário
 
 ---
 
