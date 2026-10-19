@@ -26,4 +26,5 @@ Registro cronológico de cada etapa do laboratório. Cada entrada segue o
 | 18 | [Implementação, rodada 7: dívidas antes do deploy (T079–T083)](./18-implementacao-rodada-7-dividas.md) | 6 — Testes e validação | concluída |
 | 19 | [Deploy: a aplicação roda inteira na sua máquina (T084–T086)](./19-deploy-local.md) | 7 — Deploy | concluída |
 | 20 | [Retrospectiva: o que o laboratório ensinou sobre SDD](./20-retrospectiva.md) | 8 — Retrospectiva | concluída |
-| 21 | [Preparando o laboratório para ficar público](./21-preparando-o-laboratorio-publico.md) | Pós-8 — Tutorial | em andamento |
+| 21 | [Preparando o laboratório para ficar público](./21-preparando-o-laboratorio-publico.md) | Pós-8 — Tutorial | concluída |
+| 22 | [Publicando o tutorial](./22-publicando-o-tutorial.md) | Pós-8 — Tutorial | concluída |

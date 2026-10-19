@@ -2,7 +2,7 @@
 
 - **Data:** 2026-10-19
 - **Fase:** Pós-8 — Tutorial
-- **Status:** em andamento
+- **Status:** concluída
 
 ## Objetivo
 

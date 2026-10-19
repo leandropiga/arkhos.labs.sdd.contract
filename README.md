@@ -4,6 +4,8 @@ Laboratório de estudo de **Spec-Driven Development (SDD)**: uma aplicação con
 seguindo um framework SDD, com cada passo — ideação, especificação, planejamento, tarefas,
 implementação, testes e deploy — documentado para servir de tutorial.
 
+> **Tutorial:** este laboratório virou o tutorial **[SDD na prática](https://leandropiga.github.io/tutoriais/ia-no-desenvolvimento/sdd-na-pratica/)**, com 11 capítulos para você refazer o projeto passo a passo. As tags `fase-N-…` deste repositório são os pontos de partida e de chegada de cada capítulo.
+
 ## O que é a aplicação
 
 É um sistema de **gestão de contratos de clientes**. Você faz login, cadastra clientes,
