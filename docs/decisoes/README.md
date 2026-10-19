@@ -16,3 +16,5 @@ Cada arquivo registra uma escolha: o contexto, as opções e o porquê. Modelo e
 | 0009 | [Corrigir o limite do PDF no plano, em vez de encenar o bug](./0009-plano-pega-o-limite-do-gemini.md) | aceita |
 | 0010 | [Implementar com o Superpowers sobre o `tasks.md`, por incrementos](./0010-implementacao-superpowers-sobre-tasks.md) | aceita |
 | 0011 | [Formulários com `Field` e as dependências reais do CLI do shadcn/ui](./0011-formularios-com-field-e-dependencias-do-shadcn.md) | aceita |
+| 0012 | [O tutorial é para sêniores que já usam IA (em vibe coding)](./0012-publico-do-tutorial.md) | aceita |
+| 0013 | [O tutorial vive num repositório próprio (Astro Starlight)](./0013-site-em-repositorio-proprio.md) | aceita |

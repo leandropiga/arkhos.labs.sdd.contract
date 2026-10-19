@@ -35,6 +35,7 @@ Regras de escrita:
 - O tutorial final terá **linguagem informal e simples** (diferente do tom acadêmico do rascunho).
   Escrever o diário já nesse tom: frases curtas, conversando com o leitor, sem jargão desnecessário.
 - Público: devs que ainda não usam IA para programar, mas querem conhecer SDD.
+  O **tutorial público** tem outro público (sênior que já usa IA em vibe coding), ver ADR 0012; o diário segue este texto.
 - Explicar o *porquê*, não só o *o quê*.
 - Registrar erros e becos sem saída — eles são parte valiosa do tutorial.
 - Comandos em blocos de código copiáveis, indicando o shell (PowerShell / bash).

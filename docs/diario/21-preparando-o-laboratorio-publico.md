@@ -45,3 +45,15 @@ antes do primeiro commit.** Limpar depois é bem mais caro, porque o segredo con
 
 - Tags `fase-0-setup` e `fase-5a-rodada-1` (partes 2 e 3, abaixo).
 - Tornar o repositório público (parte 3).
+
+## Parte 2 — Tags e publicação
+
+- Criei duas tags que faltavam, a pedido do tutorial: `fase-0-setup` (commit `27b84c5`, fim do
+  setup, depois de instalar Spec Kit e Superpowers) e `fase-5a-rodada-1` (commit `26d1f53`, rodada 1
+  da implementação com o diário 11). Marcos como esses deixam o leitor começar um capítulo do ponto
+  certo.
+- Tornei o repositório **público** (`gh repo edit … --visibility public`). Conferi sem login: a URL
+  responde 200.
+- Registrei duas decisões: [ADR 0012](../decisoes/0012-publico-do-tutorial.md) (público do
+  tutorial) e [ADR 0013](../decisoes/0013-site-em-repositorio-proprio.md) (site em repositório
+  próprio).
