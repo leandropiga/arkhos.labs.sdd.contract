@@ -20,7 +20,9 @@ O tutorial é também **parte dos estudos do autor**. Ele diz isso abertamente e
 ## 2. Leitor
 
 - Programador sênior, em pt-BR.
-- Já usa IA para programar, mas sem processo (vibe coding), ou tem curiosidade sobre SDD.
+- **Já usa IA para programar no dia a dia, mas em vibe coding** (pede código, ajusta até funcionar,
+  sem um processo). Conhece o dia a dia da ferramenta: prompt, contexto, agente, tokens, as
+  limitações. **Não conhece o SDD.**
 - Sabe Node, React, SQL e Git. **Não** se explica o que é um `PUT` nem um commit.
 - Tem o Claude Code instalado e aceita gastar tempo e tokens para reproduzir o projeto.
 
@@ -47,7 +49,7 @@ O tutorial é também **parte dos estudos do autor**. Ele diz isso abertamente e
 
 ## 4. Decisões já tomadas pelo autor
 
-1. Público: seniores em vibe coding / curiosos de SDD.
+1. Público: seniores que já usam IA, mas em vibe coding, ou que querem entender SDD de perto. Não é um tutorial para quem nunca usou IA.
 2. Deve explicar a decisão de usar **dois frameworks** (Spec Kit e Superpowers), com humildade.
 3. Capítulos fluidos, completos e com gancho. Muito *hands-on*.
 4. Aviso explícito de que a IA gera resultados diferentes.
@@ -140,10 +142,16 @@ Regras para o texto:
 
 ## 9. Restrições
 
-- Língua: pt-BR. Tom: colega sênior para colega sênior, direto, sem explicar o óbvio, sem tom de
-  vendedor. Frases curtas. Primeira pessoa do autor.
-- Isso **diverge do `CLAUDE.md`** do laboratório (que pede linguagem para quem nunca usou IA). Registrar
-  em ADR (`docs/decisoes/0012-...`): o público do tutorial 1 é sênior.
+- Língua: pt-BR. Tom: informal e direto, de colega para colega, sem tom de vendedor nem de curso
+  para iniciantes. Frases curtas. Primeira pessoa do autor.
+- **O que se explica e o que não:** não se explica IA (prompt, contexto, agente, token, alucinação,
+  "pedir ao Claude"): o leitor já usa. **Explica-se o SDD do zero**: constituição, especificação,
+  clarificação, plano, tarefas, análise, rodada, ledger, ruling. Cada termo é apresentado na
+  primeira vez que aparece. O contraste com o vibe coding é o fio condutor do texto.
+- O `CLAUDE.md` do laboratório diz que o público é "devs que ainda não usam IA". Isso vale para o
+  **diário** do laboratório e foi escrito antes de o autor definir o público do tutorial. **Para o
+  tutorial, o público é o do item 2.** Registrar em ADR (`docs/decisoes/0012-...`) só essa mudança
+  de público; a regra de escrita informal continua valendo.
 - Só Claude Code (ADR 0007). Cenas encenadas marcadas com `⚠️ Erro encenado`.
 - Prompts copiados do diário e de `docs/prompts/` **na íntegra**; comandos testados sempre que possível.
 - O leitor nunca deve precisar do histórico privado do autor: tudo que o texto referencia tem de
